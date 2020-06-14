@@ -1,0 +1,15 @@
+image: maven:3.6.3-openjdk-14
+
+cache:
+  paths:
+    - .m2/repository
+
+.test: &test
+  stage: test
+  script:
+    - mvn test
+
+.build: &build
+  stage: build
+  script:
+    - mvn build
