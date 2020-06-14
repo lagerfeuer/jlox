@@ -4,7 +4,7 @@ cache:
   paths:
     - .m2/repository
 
-java:
+test:
   stage: test
   script:
     - mvn verify
@@ -15,7 +15,7 @@ java:
         - target/failsafe-reports/TEST-*.xml
 
 build:
-  stage: build
+  stage: deploy
   script:
     - mvn package
   artifacts:
