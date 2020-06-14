@@ -4,12 +4,12 @@ cache:
   paths:
     - .m2/repository
 
-.test: &test
+test:
   stage: test
   script:
     - mvn test
 
-.build: &build
+build:
   stage: build
   script:
     - mvn build
