@@ -1,6 +1,6 @@
 package at.lagerfeuer.lox;
 
-import at.lagerfeuer.lox.scanner.Scanner;
+import at.lagerfeuer.lox.lexer.Lexer;
 import at.lagerfeuer.lox.token.Token;
 import at.lagerfeuer.lox.utils.ExitCode;
 
@@ -54,10 +54,14 @@ public class Lox {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
 
+        System.out.println(String.format("JLox v%s", "0.1"));
         try {
             for (; ; ) {
                 System.out.print("> ");
-                run(reader.readLine());
+                String line = reader.readLine();
+                if (line.isEmpty()) // CTRL + D
+                    return;
+                run(line);
                 hadError = false;
             }
         } catch (IOException e) {
@@ -67,8 +71,8 @@ public class Lox {
     }
 
     private static void run(String source) {
-        Scanner scanner = new Scanner(source);
-        List<Token> tokens = scanner.scanTokens();
+        Lexer lexer = new Lexer(source);
+        List<Token> tokens = lexer.scanTokens();
 
         for (Token token : tokens)
             System.out.println(token);
