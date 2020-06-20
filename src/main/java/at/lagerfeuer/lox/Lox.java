@@ -2,7 +2,7 @@ package at.lagerfeuer.lox;
 
 import at.lagerfeuer.lox.lexer.Lexer;
 import at.lagerfeuer.lox.token.Token;
-import at.lagerfeuer.lox.utils.ExitCode;
+import at.lagerfeuer.utils.ExitCode;
 
 import java.io.BufferedReader;
 import java.io.IOException;

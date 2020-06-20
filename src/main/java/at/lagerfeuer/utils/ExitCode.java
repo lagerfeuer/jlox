@@ -1,4 +1,4 @@
-package at.lagerfeuer.lox.utils;
+package at.lagerfeuer.utils;
 
 public final class ExitCode {
     public static final int USAGE = 64;
