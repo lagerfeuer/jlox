@@ -97,7 +97,7 @@ public class Lexer {
 
     private void addToken(TokenType type, Object literal) {
         String text = SOURCE.substring(start, current);
-        TOKENS.add(new Token(type, text, literal, line, filename));
+        TOKENS.add(new Token(type, text, literal, filename, line));
     }
 
     private void scanToken() {
@@ -255,7 +255,7 @@ public class Lexer {
             scanToken();
         }
 
-        TOKENS.add(new Token(EOF, "", null, line, filename));
+        TOKENS.add(new Token(EOF, "", null, filename, line));
         return TOKENS;
     }
 }

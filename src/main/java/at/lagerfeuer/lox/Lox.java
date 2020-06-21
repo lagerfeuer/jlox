@@ -43,16 +43,6 @@ public class Lox {
         }
         if (cli.hasOption("print-ast")) {
             Lox.printAst = true;
-            // TODO only temporary until we have a parser
-            Expr expression = new Expr.Binary(
-                    new Expr.Unary(
-                            new Token(TokenType.MINUS, "-", null, 1, null),
-                            new Expr.Literal(123)),
-                    new Token(TokenType.STAR, "*", null, 1, null),
-                    new Expr.Grouping(
-                            new Expr.Literal(45.67)));
-
-            System.out.println(new ASTPrinter().print(expression));
         }
 
         if (cliArgs.length > 1) {
