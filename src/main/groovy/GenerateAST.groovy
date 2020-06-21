@@ -49,12 +49,14 @@ def defineType(
 
 
 // Main
-def outputDir = "src/main/java/at/lagerfeuer/lox/parser/ast/"
+def outputDir = new File("src/main/java/at/lagerfeuer/lox/parser/ast/")
+if (!outputDir.exists())
+    outputDir.mkdirs()
 List<String> expr = Arrays.asList(
         "BinaryExpr : Expr left, Token operator, Expr right",
         "Grouping : Expr expression",
         "Literal : Object value",
         "UnaryExpr : Token operator, Expr right"
 )
-defineAst(outputDir, "Expr", expr)
+defineAst(outputDir.toString(), "Expr", expr)
 
