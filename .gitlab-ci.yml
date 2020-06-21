@@ -1,4 +1,4 @@
-image: maven:3.6.3-openjdk-14
+image: maven:3.6.3-openjdk-10
 
 cache:
   paths:
