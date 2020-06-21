@@ -1,8 +1,12 @@
 package at.lagerfeuer.lox;
 
+import at.lagerfeuer.lox.ast.ASTPrinter;
+import at.lagerfeuer.lox.ast.Expr;
 import at.lagerfeuer.lox.lexer.Lexer;
 import at.lagerfeuer.lox.token.Token;
+import at.lagerfeuer.lox.token.TokenType;
 import at.lagerfeuer.utils.ExitCode;
+import org.apache.commons.cli.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,17 +19,52 @@ import java.util.List;
 public class Lox {
     static boolean hadError = false;
     static boolean interactive = false;
+    static boolean printAst = false;
 
-    public static void main(String args[]) {
-        if (args.length > 1) {
-            System.out.println("Usage: jlox [file]");
+    public static void main(String[] args) {
+        Options options = new Options();
+        options.addOption(Option.builder("h").longOpt("help").desc("Print this message").build());
+        options.addOption(Option.builder().longOpt("print-ast").desc("Print the AST for every input").build());
+
+        DefaultParser parser = new DefaultParser();
+        CommandLine cli = null;
+        try {
+            cli = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.err.println("CLI Parser Error");
             System.exit(ExitCode.USAGE);
-        } else if (args.length == 1) {
-            runFile(args[0]);
+        }
+        String[] cliArgs = cli.getArgs();
+        HelpFormatter help = new HelpFormatter();
+
+        if (cli.hasOption("help")) {
+            help.printHelp("jlox", options);
+            System.exit(ExitCode.SUCCESS);
+        }
+        if (cli.hasOption("print-ast")) {
+            Lox.printAst = true;
+            // TODO only temporary until we have a parser
+            Expr expression = new Expr.Binary(
+                    new Expr.Unary(
+                            new Token(TokenType.MINUS, "-", null, 1, null),
+                            new Expr.Literal(123)),
+                    new Token(TokenType.STAR, "*", null, 1, null),
+                    new Expr.Grouping(
+                            new Expr.Literal(45.67)));
+
+            System.out.println(new ASTPrinter().print(expression));
+        }
+
+        if (cliArgs.length > 1) {
+            help.printHelp("jlox", options);
+            System.exit(ExitCode.USAGE);
+        } else if (cliArgs.length == 1) {
+            runFile(cliArgs[0]);
         } else {
             interactive = true;
             repl();
         }
+
     }
 
     /**
@@ -59,7 +98,7 @@ public class Lox {
             for (; ; ) {
                 System.out.print("> ");
                 String line = reader.readLine();
-                if (line.isEmpty()) // CTRL + D
+                if (line == null || line.isEmpty()) // CTRL + D
                     return;
                 run(line);
                 hadError = false;
