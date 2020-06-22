@@ -10,7 +10,7 @@ def defineAst(String outputDir, String baseName, List<String> types) {
     writer.println("package at.lagerfeuer.lox.ast;")
     writer.println()
     writer.println("import java.util.List;")
-    writer.println("import at.lagerfeuer.lox.token.*;")
+    writer.println("import at.lagerfeuer.lox.*;")
     writer.println()
     writer.println("// Generated source code")
     writer.println(String.format("public abstract class %s {", baseName))

@@ -1,7 +1,7 @@
 package at.lagerfeuer.lox.ast;
 
 import java.util.List;
-import at.lagerfeuer.lox.token.*;
+import at.lagerfeuer.lox.*;
 
 // Generated source code
 public abstract class Expr {

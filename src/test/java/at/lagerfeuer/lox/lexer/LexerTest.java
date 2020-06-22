@@ -1,14 +1,15 @@
 package at.lagerfeuer.lox.lexer;
 
-import at.lagerfeuer.lox.token.Token;
-import at.lagerfeuer.lox.token.TokenType;
+import at.lagerfeuer.lox.Lexer;
+import at.lagerfeuer.lox.Token;
+import at.lagerfeuer.lox.TokenType;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static at.lagerfeuer.lox.token.TokenType.*;
+import static at.lagerfeuer.lox.TokenType.*;
 
 class LexerTest {
 

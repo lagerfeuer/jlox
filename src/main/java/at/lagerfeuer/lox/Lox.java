@@ -1,10 +1,5 @@
 package at.lagerfeuer.lox;
 
-import at.lagerfeuer.lox.ast.ASTPrinter;
-import at.lagerfeuer.lox.ast.Expr;
-import at.lagerfeuer.lox.lexer.Lexer;
-import at.lagerfeuer.lox.token.Token;
-import at.lagerfeuer.lox.token.TokenType;
 import at.lagerfeuer.utils.ExitCode;
 import org.apache.commons.cli.*;
 
@@ -64,8 +59,7 @@ public class Lox {
      */
     private static void runFile(String path) {
         try {
-            String content = new String(Files.readAllBytes(Paths.get(path)),
-                    Charset.defaultCharset());
+            String content = Files.readString(Paths.get(path), Charset.defaultCharset());
             run(content);
             if (hadError)
                 System.exit(ExitCode.DATAERR);

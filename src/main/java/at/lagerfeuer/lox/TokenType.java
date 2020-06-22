@@ -1,4 +1,4 @@
-package at.lagerfeuer.lox.token;
+package at.lagerfeuer.lox;
 
 public enum TokenType {
     // Literals

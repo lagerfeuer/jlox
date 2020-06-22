@@ -1,4 +1,4 @@
-package at.lagerfeuer.lox.token;
+package at.lagerfeuer.lox;
 
 import java.util.Objects;
 

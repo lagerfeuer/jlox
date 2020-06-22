@@ -1,15 +1,11 @@
-package at.lagerfeuer.lox.lexer;
-
-import at.lagerfeuer.lox.Lox;
-import at.lagerfeuer.lox.token.Token;
-import at.lagerfeuer.lox.token.TokenType;
+package at.lagerfeuer.lox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static at.lagerfeuer.lox.token.TokenType.*;
+import static at.lagerfeuer.lox.TokenType.*;
 
 public class Lexer {
     private final String SOURCE;
