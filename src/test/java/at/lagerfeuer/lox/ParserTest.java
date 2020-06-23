@@ -1,7 +1,6 @@
 package at.lagerfeuer.lox;
 
 import at.lagerfeuer.lox.ast.Expr;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,22 +12,131 @@ class ParserTest {
         return parser.parse();
     }
 
+    private void assertLiteral(Expr literal, int ref) {
+        double litval = (double) ((Expr.Literal) literal).value;
+        assertEquals((double) ref, litval, 0.001);
+    }
+
+    private void assertLiteral(Expr literal, Object ref) {
+        Object litval = ((Expr.Literal) literal).value;
+        if (litval instanceof Double)
+            assertEquals((double) ref, (double) litval, 0.001);
+        else
+            assertSame(ref, litval);
+    }
+
     @Test
     void addition() {
         String input = "1 + 2 + 3";
         Expr expr = parse(input);
 
-        Assert.assertTrue(expr instanceof Expr.Binary);
+        assertTrue(expr instanceof Expr.Binary);
         Expr.Binary bexpr = (Expr.Binary) expr;
 
-        System.out.println(bexpr.left.getClass().toString());
-        Assert.assertTrue(bexpr.left instanceof Expr.Binary);
-        Assert.assertSame(bexpr.operator.type, TokenType.PLUS);
-        Assert.assertTrue(bexpr.right instanceof Expr.Literal);
+        assertTrue(bexpr.left instanceof Expr.Binary);
+        assertSame(bexpr.operator.type, TokenType.PLUS);
+        assertTrue(bexpr.right instanceof Expr.Literal);
 
         Expr.Binary left = (Expr.Binary) bexpr.left;
-        Assert.assertTrue(left.left instanceof Expr.Literal);
-        Assert.assertSame(left.operator.type, TokenType.PLUS);
-        Assert.assertTrue(left.right instanceof Expr.Literal);
+        assertTrue(left.left instanceof Expr.Literal);
+        assertSame(left.operator.type, TokenType.PLUS);
+        assertTrue(left.right instanceof Expr.Literal);
+    }
+
+    @Test
+    void multiplication() {
+        String input = "1 * 2 * 3";
+        Expr expr = parse(input);
+
+        assertTrue(expr instanceof Expr.Binary);
+        Expr.Binary bexpr = (Expr.Binary) expr;
+
+        assertTrue(bexpr.left instanceof Expr.Binary);
+        assertSame(bexpr.operator.type, TokenType.STAR);
+        assertTrue(bexpr.right instanceof Expr.Literal);
+
+        Expr.Binary left = (Expr.Binary) bexpr.left;
+        assertTrue(left.left instanceof Expr.Literal);
+        assertSame(left.operator.type, TokenType.STAR);
+        assertTrue(left.right instanceof Expr.Literal);
+    }
+
+    @Test
+    void additionAndMultiplication() {
+        String input = "1 + 2 * 3";
+        Expr expr = parse(input);
+
+        assertTrue(expr instanceof Expr.Binary);
+        Expr.Binary bexpr = (Expr.Binary) expr;
+
+        assertTrue(bexpr.left instanceof Expr.Literal);
+        assertSame(bexpr.operator.type, TokenType.PLUS);
+        assertTrue(bexpr.right instanceof Expr.Binary);
+
+        Expr.Binary right = (Expr.Binary) bexpr.right;
+        assertTrue(right.left instanceof Expr.Literal);
+        assertSame(right.operator.type, TokenType.STAR);
+        assertTrue(right.right instanceof Expr.Literal);
+    }
+
+    @Test
+    void unary() {
+        String input = "!!true";
+        Expr expr = parse(input);
+
+        assertTrue(expr instanceof Expr.Unary);
+        Expr.Unary unary = (Expr.Unary) expr;
+        assertSame(unary.operator.type, TokenType.BANG);
+        assertTrue(unary.right instanceof Expr.Unary);
+
+        unary = (Expr.Unary) unary.right;
+        assertSame(unary.operator.type, TokenType.BANG);
+        assertLiteral(unary.right, true);
+    }
+
+    @Test
+    void ternary() {
+        String input = "true ? 1 : 2";
+        Expr expr = parse(input);
+
+        assertTrue(expr instanceof Expr.Ternary);
+        Expr.Ternary texpr = (Expr.Ternary) expr;
+
+        assertLiteral(texpr.condition, true);
+        assertLiteral(texpr.trueBranch, 1.0);
+        assertLiteral(texpr.falseBranch, 2.0);
+    }
+
+    @Test
+    void nestedTernary() {
+        String input = "false ? true ? 1 : 2 : 3";
+        Expr expr = parse(input);
+
+        assertTrue(expr instanceof Expr.Ternary);
+        Expr.Ternary texpr = (Expr.Ternary) expr;
+
+        assertLiteral(texpr.condition, false);
+        assertTrue(texpr.trueBranch instanceof Expr.Ternary);
+        assertLiteral(texpr.falseBranch, 3.0);
+
+        Expr.Ternary trueexpr = (Expr.Ternary) texpr.trueBranch;
+
+        assertLiteral(trueexpr.condition, true);
+        assertLiteral(trueexpr.trueBranch, 1.0);
+        assertLiteral(trueexpr.falseBranch, 2.0);
+    }
+
+    @Test
+    void comma() {
+        String input = "1, 2, true ? 3 : -1, false";
+        Expr expr = parse(input);
+
+        assertTrue(expr instanceof Expr.Comma);
+        Expr.Comma comma = (Expr.Comma) expr;
+        assertSame(4, comma.exprs.size());
+        assertLiteral(comma.exprs.get(0), 1);
+        assertLiteral(comma.exprs.get(1), 2);
+        assertTrue(comma.exprs.get(2) instanceof Expr.Ternary);
+        assertLiteral(comma.exprs.get(3), false);
     }
 }

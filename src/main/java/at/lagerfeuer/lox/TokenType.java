@@ -12,6 +12,7 @@ public enum TokenType {
     SLASH,
     BANG,
     EQUAL,
+    QUESTION,
     DOT, COMMA, COLON, SEMICOLON,
     // Comparison
     EQUAL_EQUAL, BANG_EQUAL,

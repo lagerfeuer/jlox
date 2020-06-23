@@ -1,14 +1,11 @@
 package at.lagerfeuer.lox;
 
-import at.lagerfeuer.lox.Lexer;
-import at.lagerfeuer.lox.Token;
-import at.lagerfeuer.lox.TokenType;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static at.lagerfeuer.lox.TokenType.*;
 
 class LexerTest {
@@ -31,7 +28,7 @@ class LexerTest {
                 NIL, AND, OR, TRUE, FALSE, CLASS, VAR, FUN, IF, ELSE, FOR, WHILE, PRINT, RETURN, SUPER, THIS, EOF
         };
         TokenType[] types = lex(source);
-        assertArrayEquals("Keyword Tokens", ref, types);
+        assertArrayEquals(ref, types);
     }
 
     @Test
@@ -39,7 +36,7 @@ class LexerTest {
         String source = "+ - * / ! =";
         TokenType[] ref = {PLUS, MINUS, STAR, SLASH, BANG, EQUAL, EOF};
         TokenType[] types = lex(source);
-        assertArrayEquals("Operator Tokens", ref, types);
+        assertArrayEquals(ref, types);
     }
 
     @Test
@@ -47,7 +44,7 @@ class LexerTest {
         String source = "!= == < > <= >=";
         TokenType[] ref = {BANG_EQUAL, EQUAL_EQUAL, LESS, GREATER, LESS_EQUAL, GREATER_EQUAL, EOF};
         TokenType[] types = lex(source);
-        assertArrayEquals("Comparison Tokens", ref, types);
+        assertArrayEquals(ref, types);
     }
 
     @Test
@@ -63,7 +60,7 @@ class LexerTest {
 
         Token[] tokens = new Lexer(source).scanTokens().toArray(new Token[0]);
 
-        assertArrayEquals("Literal Tokens", ref, tokens);
+        assertArrayEquals(ref, tokens);
     }
 
     @Test
@@ -71,7 +68,7 @@ class LexerTest {
         String source = "() [] {}";
         TokenType[] ref = {LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, EOF};
         TokenType[] types = lex(source);
-        assertArrayEquals("Parenthesis Tokens", ref, types);
+        assertArrayEquals(ref, types);
     }
 
     @Test
@@ -88,7 +85,7 @@ class LexerTest {
                 new Token(EOF, "", null)
         };
         Token[] tokens = new Lexer(source).scanTokens().toArray(new Token[0]);
-        assertArrayEquals("Comments", ref, tokens);
+        assertArrayEquals(ref, tokens);
     }
 
     @Test
@@ -96,15 +93,15 @@ class LexerTest {
         String source = ". : , ;";
         TokenType[] ref = {DOT, COLON, COMMA, SEMICOLON, EOF};
         TokenType[] types = lex(source);
-        assertArrayEquals("Other Tokens", ref, types);
+        assertArrayEquals(ref, types);
     }
 
     @Test
     void unexpected() {
-        String source ="%";
+        String source = "%";
         TokenType[] ref = {EOF};
         TokenType[] types = lex(source);
-        assertArrayEquals("Unknown Token/Unexpected Char", ref, types);
+        assertArrayEquals(ref, types);
     }
 
     @Test
@@ -112,6 +109,6 @@ class LexerTest {
         String source = "\"string";
         TokenType[] ref = {EOF};
         TokenType[] types = lex(source);
-        assertArrayEquals("Unterminated String", ref, types);
+        assertArrayEquals(ref, types);
     }
 }

@@ -81,7 +81,9 @@ List<String> expr = Arrays.asList(
         "Binary : Expr left, Token operator, Expr right",
         "Grouping : Expr expression",
         "Literal : Object value",
-        "Unary : Token operator, Expr right"
+        "Unary : Token operator, Expr right",
+        "Ternary : Expr condition, Expr trueBranch, Expr falseBranch",
+        "Comma : List<Expr> exprs"
 )
 defineAst(outputDir.toString(), "Expr", expr)
 

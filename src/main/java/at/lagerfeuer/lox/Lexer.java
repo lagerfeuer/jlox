@@ -111,6 +111,8 @@ public class Lexer {
                 else
                     addToken(SLASH);
                 break;
+            case '?':
+                addToken(QUESTION); break;
             case '.':
                 addToken(DOT); break;
             case ',':
@@ -231,7 +233,7 @@ public class Lexer {
             while (peek() != '\n' && !isEOF())
                 advance();
         } else {
-            while(!(peek() == '*' && peekNext() == '/') && !isEOF()) {
+            while (!(peek() == '*' && peekNext() == '/') && !isEOF()) {
                 advance();
             }
             advance(); // eat '*' in '*/'

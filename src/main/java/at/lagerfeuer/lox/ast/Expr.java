@@ -10,6 +10,8 @@ public abstract class Expr {
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitUnaryExpr(Unary expr);
+    R visitTernaryExpr(Ternary expr);
+    R visitCommaExpr(Comma expr);
   }
   public static class Binary extends Expr {
     public Binary (Expr left, Token operator, Expr right) {
@@ -64,6 +66,34 @@ public abstract class Expr {
 
    public final Token operator;
    public final Expr right;
+  }
+  public static class Ternary extends Expr {
+    public Ternary (Expr condition, Expr trueBranch, Expr falseBranch) {
+      this.condition = condition;
+      this.trueBranch = trueBranch;
+      this.falseBranch = falseBranch;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitTernaryExpr(this);
+    }
+
+   public final Expr condition;
+   public final Expr trueBranch;
+   public final Expr falseBranch;
+  }
+  public static class Comma extends Expr {
+    public Comma (List<Expr> exprs) {
+      this.exprs = exprs;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitCommaExpr(this);
+    }
+
+   public final List<Expr> exprs;
   }
 
   abstract <R> R accept(Visitor<R> visitor);

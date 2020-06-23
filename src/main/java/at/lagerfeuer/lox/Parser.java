@@ -2,6 +2,7 @@ package at.lagerfeuer.lox;
 
 import at.lagerfeuer.lox.ast.Expr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static at.lagerfeuer.lox.TokenType.*;
@@ -97,7 +98,26 @@ public class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        return comma();
+    }
+
+    private Expr comma() {
+        List<Expr> list = new ArrayList<>();
+        do {
+            list.add(ternary());
+        } while (match(COMMA));
+        return (list.size() == 1) ? list.get(0) : new Expr.Comma(list);
+    }
+
+    private Expr ternary() {
+        Expr expr = equality();
+        if (match(QUESTION)) {
+            Expr trueBranch = ternary();
+            consume(COLON, "Ternary operator expects ':'");
+            Expr falseBranch = equality();
+            return new Expr.Ternary(expr, trueBranch, falseBranch);
+        }
+        return expr;
     }
 
     private Expr equality() {
