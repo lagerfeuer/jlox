@@ -23,9 +23,9 @@ public abstract class Expr {
       return visitor.visitBinaryExpr(this);
     }
 
-   final Expr left;
-   final Token operator;
-   final Expr right;
+   public final Expr left;
+   public final Token operator;
+   public final Expr right;
   }
   public static class Grouping extends Expr {
     public Grouping (Expr expression) {
@@ -37,7 +37,7 @@ public abstract class Expr {
       return visitor.visitGroupingExpr(this);
     }
 
-   final Expr expression;
+   public final Expr expression;
   }
   public static class Literal extends Expr {
     public Literal (Object value) {
@@ -49,7 +49,7 @@ public abstract class Expr {
       return visitor.visitLiteralExpr(this);
     }
 
-   final Object value;
+   public final Object value;
   }
   public static class Unary extends Expr {
     public Unary (Token operator, Expr right) {
@@ -62,8 +62,8 @@ public abstract class Expr {
       return visitor.visitUnaryExpr(this);
     }
 
-   final Token operator;
-   final Expr right;
+   public final Token operator;
+   public final Expr right;
   }
 
   abstract <R> R accept(Visitor<R> visitor);

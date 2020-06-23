@@ -66,7 +66,7 @@ def defineType(
     // Fields
     writer.println()
     for (String field : fields) {
-        writer.println(String.format("   final %s;", field))
+        writer.println(String.format("   public final %s;", field))
     }
 
     writer.println("  }")

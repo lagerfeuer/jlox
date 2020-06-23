@@ -1,5 +1,7 @@
 package at.lagerfeuer.lox;
 
+import at.lagerfeuer.lox.ast.ASTPrinter;
+import at.lagerfeuer.lox.ast.Expr;
 import at.lagerfeuer.utils.ExitCode;
 import org.apache.commons.cli.*;
 
@@ -19,7 +21,7 @@ public class Lox {
     public static void main(String[] args) {
         Options options = new Options();
         options.addOption(Option.builder("h").longOpt("help").desc("Print this message").build());
-        options.addOption(Option.builder().longOpt("print-ast").desc("Print the AST for every input").build());
+        options.addOption(Option.builder().longOpt("print-ast").desc("Print the AST").build());
 
         DefaultParser parser = new DefaultParser();
         CommandLine cli = null;
@@ -97,17 +99,25 @@ public class Lox {
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.scanTokens();
 
-        for (Token token : tokens)
-            System.out.println(token);
-    }
+        Parser parser = new Parser(tokens);
+        Expr expr = parser.parse();
 
-    public static void error(String filename, int line, String message, Object... arguments) {
-        error(filename, line, String.format(message, arguments));
+        if (Lox.printAst)
+            System.out.println(new ASTPrinter().print(expr));
+
     }
 
     public static void error(String filename, int line, String message) {
         hadError = true;
         report(line, filename, message);
+    }
+
+    public static void error(Token token, String message) {
+        if (token.type == TokenType.EOF) {
+            report(token.line, " at end", message);
+        } else {
+            report(token.line, " at '" + token.lexeme + "'", message);
+        }
     }
 
     private static void report(int line, String where, String message) {

@@ -1,4 +1,4 @@
-package at.lagerfeuer.lox.lexer;
+package at.lagerfeuer.lox;
 
 import at.lagerfeuer.lox.Lexer;
 import at.lagerfeuer.lox.Token;

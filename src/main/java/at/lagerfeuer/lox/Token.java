@@ -67,8 +67,8 @@ public class Token {
             return false;
 
         Token other = (Token) obj;
-        return (this.getType() == other.getType())
-                && (Objects.equals(this.getLexeme(), other.getLexeme()))
-                && (Objects.equals(this.getLiteral(), other.getLiteral()));
+        return (this.type == other.type)
+                && (Objects.equals(this.lexeme, other.lexeme))
+                && (Objects.equals(this.literal, other.literal));
     }
 }
