@@ -1,6 +1,7 @@
 package at.lagerfeuer.lox;
 
 import at.lagerfeuer.lox.ast.Expr;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +24,32 @@ class ParserTest {
             assertEquals((double) ref, (double) litval, 0.001);
         else
             assertSame(ref, litval);
+    }
+
+    @Test
+    void equality() {
+        String input = "1 != 2";
+        Expr expr = parse(input);
+
+        assertTrue(expr instanceof Expr.Binary);
+        Expr.Binary bexpr = (Expr.Binary) expr;
+
+        assertLiteral(bexpr.left, 1);
+        assertSame(bexpr.operator.type, TokenType.BANG_EQUAL);
+        assertLiteral(bexpr.right, 2);
+    }
+
+    @Test
+    void comparison() {
+        String input = "1 < 2";
+        Expr expr = parse(input);
+
+        assertTrue(expr instanceof Expr.Binary);
+        Expr.Binary bexpr = (Expr.Binary) expr;
+
+        assertLiteral(bexpr.left, 1);
+        assertSame(bexpr.operator.type, TokenType.LESS);
+        assertLiteral(bexpr.right, 2);
     }
 
     @Test
@@ -95,6 +122,16 @@ class ParserTest {
     }
 
     @Test
+    void parenthesis() {
+        String input = "(nil)";
+        Expr expr = parse(input);
+
+        assertTrue(expr instanceof Expr.Grouping);
+        Expr.Grouping gexpr = (Expr.Grouping) expr;
+        assertLiteral(gexpr.expr, null);
+    }
+
+    @Test
     void ternary() {
         String input = "true ? 1 : 2";
         Expr expr = parse(input);
@@ -138,5 +175,20 @@ class ParserTest {
         assertLiteral(comma.exprs.get(1), 2);
         assertTrue(comma.exprs.get(2) instanceof Expr.Ternary);
         assertLiteral(comma.exprs.get(3), false);
+    }
+
+    @Test
+    void missingRParen() {
+        String input = "( 1 + 2; var a = 1";
+        Expr expr = parse(input);
+        assertNull(expr);
+
+        input = "+ 2 var a = 1";
+        expr = parse(input);
+        assertNull(expr);
+
+        input = "+ 2";
+        expr = parse(input);
+        assertNull(expr);
     }
 }

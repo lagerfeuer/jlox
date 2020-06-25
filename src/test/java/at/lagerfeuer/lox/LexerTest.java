@@ -16,7 +16,7 @@ class LexerTest {
 
         List<TokenType> types = new ArrayList<>();
         for (Token token : tokens)
-            types.add(token.getType());
+            types.add(token.type);
 
         return types.toArray(new TokenType[0]);
     }

@@ -79,7 +79,7 @@ if (!outputDir.exists())
     outputDir.mkdirs()
 List<String> expr = Arrays.asList(
         "Binary : Expr left, Token operator, Expr right",
-        "Grouping : Expr expression",
+        "Grouping : Expr expr",
         "Literal : Object value",
         "Unary : Token operator, Expr right",
         "Ternary : Expr condition, Expr trueBranch, Expr falseBranch",
