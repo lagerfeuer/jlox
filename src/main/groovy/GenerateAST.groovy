@@ -27,7 +27,7 @@ def defineAst(String outputDir, String baseName, List<String> types) {
 
     // base accept() method
     writer.println()
-    writer.println("  abstract <R> R accept(Visitor<R> visitor);")
+    writer.println("  abstract public <R> R accept(Visitor<R> visitor);")
 
     // Closing
     writer.println("}")
@@ -36,7 +36,7 @@ def defineAst(String outputDir, String baseName, List<String> types) {
 
 def defineVisitor(
         PrintWriter writer, String baseName, List<String> types) {
-    writer.println("  interface Visitor<R> {")
+    writer.println("  public interface Visitor<R> {")
     for (String type : types) {
         String typeName = type.split(':')[0].trim()
         writer.println(String.format("    R visit%s%s(%s %s);", typeName, baseName, typeName, baseName.toLowerCase()))
@@ -59,7 +59,7 @@ def defineType(
     // Visitor pattern
     writer.println()
     writer.println("    @Override")
-    writer.println("    <R> R accept(Visitor<R> visitor) {")
+    writer.println("    public <R> R accept(Visitor<R> visitor) {")
     writer.println(String.format("      return visitor.visit%s%s(this);", className, baseName))
     writer.println("    }")
 

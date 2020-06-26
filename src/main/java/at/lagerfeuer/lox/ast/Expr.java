@@ -5,7 +5,7 @@ import at.lagerfeuer.lox.*;
 
 // Generated source code
 public abstract class Expr {
-  interface Visitor<R> {
+  public interface Visitor<R> {
     R visitBinaryExpr(Binary expr);
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
@@ -21,7 +21,7 @@ public abstract class Expr {
     }
 
     @Override
-    <R> R accept(Visitor<R> visitor) {
+    public <R> R accept(Visitor<R> visitor) {
       return visitor.visitBinaryExpr(this);
     }
 
@@ -35,7 +35,7 @@ public abstract class Expr {
     }
 
     @Override
-    <R> R accept(Visitor<R> visitor) {
+    public <R> R accept(Visitor<R> visitor) {
       return visitor.visitGroupingExpr(this);
     }
 
@@ -47,7 +47,7 @@ public abstract class Expr {
     }
 
     @Override
-    <R> R accept(Visitor<R> visitor) {
+    public <R> R accept(Visitor<R> visitor) {
       return visitor.visitLiteralExpr(this);
     }
 
@@ -60,7 +60,7 @@ public abstract class Expr {
     }
 
     @Override
-    <R> R accept(Visitor<R> visitor) {
+    public <R> R accept(Visitor<R> visitor) {
       return visitor.visitUnaryExpr(this);
     }
 
@@ -75,7 +75,7 @@ public abstract class Expr {
     }
 
     @Override
-    <R> R accept(Visitor<R> visitor) {
+    public <R> R accept(Visitor<R> visitor) {
       return visitor.visitTernaryExpr(this);
     }
 
@@ -89,12 +89,12 @@ public abstract class Expr {
     }
 
     @Override
-    <R> R accept(Visitor<R> visitor) {
+    public <R> R accept(Visitor<R> visitor) {
       return visitor.visitCommaExpr(this);
     }
 
    public final List<Expr> exprs;
   }
 
-  abstract <R> R accept(Visitor<R> visitor);
+  abstract public <R> R accept(Visitor<R> visitor);
 }

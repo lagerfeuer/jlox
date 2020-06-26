@@ -1,7 +1,6 @@
 package at.lagerfeuer.lox;
 
 import at.lagerfeuer.lox.ast.Expr;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +22,7 @@ class ParserTest {
         if (litval instanceof Double)
             assertEquals((double) ref, (double) litval, 0.001);
         else
-            assertSame(ref, litval);
+            assertEquals(ref, litval);
     }
 
     @Test
@@ -170,7 +169,7 @@ class ParserTest {
 
         assertTrue(expr instanceof Expr.Comma);
         Expr.Comma comma = (Expr.Comma) expr;
-        assertSame(4, comma.exprs.size());
+        assertEquals(4, comma.exprs.size());
         assertLiteral(comma.exprs.get(0), 1);
         assertLiteral(comma.exprs.get(1), 2);
         assertTrue(comma.exprs.get(2) instanceof Expr.Ternary);

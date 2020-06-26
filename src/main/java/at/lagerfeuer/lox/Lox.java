@@ -14,14 +14,22 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Lox {
+    private static final Interpreter interpreter = new Interpreter();
     static boolean hadError = false;
+    static boolean hadRuntimeError = false;
     static boolean interactive = false;
     static boolean printAst = false;
 
     public static void main(String[] args) {
         Options options = new Options();
-        options.addOption(Option.builder("h").longOpt("help").desc("Print this message").build());
-        options.addOption(Option.builder().longOpt("print-ast").desc("Print the AST").build());
+        options.addOption(Option.builder("h")
+                .longOpt("help")
+                .desc("Print this message")
+                .build());
+        options.addOption(Option.builder()
+                .longOpt("print-ast")
+                .desc("Print the AST instead of interpreting the input")
+                .build());
 
         DefaultParser parser = new DefaultParser();
         CommandLine cli = null;
@@ -65,6 +73,8 @@ public class Lox {
             run(content);
             if (hadError)
                 System.exit(ExitCode.DATAERR);
+            if (hadRuntimeError)
+                System.exit(ExitCode.SOFTWARE);
 
         } catch (IOException e) {
             System.err.println("Could not read file " + path);
@@ -78,8 +88,8 @@ public class Lox {
     private static void repl() {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
-
         System.out.println(String.format("JLox v%s", "0.1"));
+
         try {
             for (; ; ) {
                 System.out.print("> ");
@@ -104,7 +114,10 @@ public class Lox {
 
         if (Lox.printAst)
             System.out.println(new ASTPrinter().print(expr));
-
+        else {
+            Object result = interpreter.interpret(expr);
+            System.out.println(Interpreter.stringify(result));
+        }
     }
 
     public static void error(String filename, int line, String message) {
@@ -118,6 +131,12 @@ public class Lox {
         } else {
             report(token.line, " at '" + token.lexeme + "'", message);
         }
+    }
+
+    public static void runtimeError(RuntimeError error) {
+        System.err.println(String.format("[RuntimeError] %s:%d\t%s",
+                error.token.file, error.token.line, error.getMessage()));
+        hadRuntimeError = true;
     }
 
     private static void report(int line, String where, String message) {
