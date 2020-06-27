@@ -1,20 +1,38 @@
 package at.lagerfeuer.lox;
 
 import at.lagerfeuer.lox.ast.Expr;
+import at.lagerfeuer.lox.ast.Stmt;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-public class Interpreter implements Expr.Visitor<Object> {
-    public Object interpret(Expr expression) {
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+    public void interpret(List<Stmt> stmts) {
         try {
-            Object result = evaluate(expression);
-            // System.out.println(stringify(result));
-            return result;
+            for (Stmt stmt : stmts)
+                execute(stmt);
         } catch (RuntimeError error) {
             Lox.runtimeError(error);
         }
-        return null;
+    }
+
+    /**
+     * For testing purposes.
+     *
+     * @param expr expression to interpret
+     * @return result of the evaluation as Object.
+     */
+    public Object interpret(Expr expr) {
+        try {
+            return expr.accept(this);
+        } catch (RuntimeError error) {
+            return null;
+        }
+    }
+
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
     }
 
     private Object evaluate(Expr expr) {
@@ -38,7 +56,7 @@ public class Interpreter implements Expr.Visitor<Object> {
     }
 
     private String str(Object object) {
-        return Interpreter.stringify(object);
+        return stringify(object);
     }
 
     private boolean isTruthy(Object obj) {
@@ -209,5 +227,18 @@ public class Interpreter implements Expr.Visitor<Object> {
         for (Expr e : expr.exprs)
             last = evaluate(e);
         return last;
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expr);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expr);
+        System.out.println(stringify(value));
+        return null;
     }
 }

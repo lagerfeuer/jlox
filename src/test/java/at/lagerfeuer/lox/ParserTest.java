@@ -1,7 +1,10 @@
 package at.lagerfeuer.lox;
 
 import at.lagerfeuer.lox.ast.Expr;
+import at.lagerfeuer.lox.ast.Stmt;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,7 +12,8 @@ class ParserTest {
     private Expr parse(String input) {
         Lexer lexer = new Lexer(input);
         Parser parser = new Parser(lexer.scanTokens());
-        return parser.parse();
+        List<Stmt> stmts = parser.parse();
+        return (stmts.isEmpty()) ? null : ((Stmt.Expression) stmts.get(0)).expr;
     }
 
     private void assertLiteral(Expr literal, int ref) {
@@ -27,7 +31,7 @@ class ParserTest {
 
     @Test
     void equality() {
-        String input = "1 != 2";
+        String input = "1 != 2;";
         Expr expr = parse(input);
 
         assertTrue(expr instanceof Expr.Binary);
@@ -40,7 +44,7 @@ class ParserTest {
 
     @Test
     void comparison() {
-        String input = "1 < 2";
+        String input = "1 < 2;";
         Expr expr = parse(input);
 
         assertTrue(expr instanceof Expr.Binary);
@@ -53,7 +57,7 @@ class ParserTest {
 
     @Test
     void addition() {
-        String input = "1 + 2 + 3";
+        String input = "1 + 2 + 3;";
         Expr expr = parse(input);
 
         assertTrue(expr instanceof Expr.Binary);
@@ -71,7 +75,7 @@ class ParserTest {
 
     @Test
     void multiplication() {
-        String input = "1 * 2 * 3";
+        String input = "1 * 2 * 3;";
         Expr expr = parse(input);
 
         assertTrue(expr instanceof Expr.Binary);
@@ -89,7 +93,7 @@ class ParserTest {
 
     @Test
     void additionAndMultiplication() {
-        String input = "1 + 2 * 3";
+        String input = "1 + 2 * 3;";
         Expr expr = parse(input);
 
         assertTrue(expr instanceof Expr.Binary);
@@ -107,7 +111,7 @@ class ParserTest {
 
     @Test
     void unary() {
-        String input = "!!true";
+        String input = "!!true;";
         Expr expr = parse(input);
 
         assertTrue(expr instanceof Expr.Unary);
@@ -122,7 +126,7 @@ class ParserTest {
 
     @Test
     void parenthesis() {
-        String input = "(nil)";
+        String input = "(nil);";
         Expr expr = parse(input);
 
         assertTrue(expr instanceof Expr.Grouping);
@@ -132,7 +136,7 @@ class ParserTest {
 
     @Test
     void ternary() {
-        String input = "true ? 1 : 2";
+        String input = "true ? 1 : 2;";
         Expr expr = parse(input);
 
         assertTrue(expr instanceof Expr.Ternary);
@@ -145,7 +149,7 @@ class ParserTest {
 
     @Test
     void nestedTernary() {
-        String input = "false ? true ? 1 : 2 : 3";
+        String input = "false ? true ? 1 : 2 : 3;";
         Expr expr = parse(input);
 
         assertTrue(expr instanceof Expr.Ternary);
@@ -164,7 +168,7 @@ class ParserTest {
 
     @Test
     void comma() {
-        String input = "1, 2, true ? 3 : -1, false";
+        String input = "1, 2, true ? 3 : -1, false;";
         Expr expr = parse(input);
 
         assertTrue(expr instanceof Expr.Comma);
@@ -178,15 +182,15 @@ class ParserTest {
 
     @Test
     void missingRParen() {
-        String input = "( 1 + 2; var a = 1";
+        String input = "( 1 + 2; var a = 1;";
         Expr expr = parse(input);
         assertNull(expr);
 
-        input = "+ 2 var a = 1";
+        input = "+ 2 var a = 1;";
         expr = parse(input);
         assertNull(expr);
 
-        input = "+ 2";
+        input = "+ 2;";
         expr = parse(input);
         assertNull(expr);
     }

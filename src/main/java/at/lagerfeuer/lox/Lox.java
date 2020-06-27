@@ -2,6 +2,7 @@ package at.lagerfeuer.lox;
 
 import at.lagerfeuer.lox.ast.ASTPrinter;
 import at.lagerfeuer.lox.ast.Expr;
+import at.lagerfeuer.lox.ast.Stmt;
 import at.lagerfeuer.utils.ExitCode;
 import org.apache.commons.cli.*;
 
@@ -110,13 +111,12 @@ public class Lox {
         List<Token> tokens = lexer.scanTokens();
 
         Parser parser = new Parser(tokens);
-        Expr expr = parser.parse();
+        List<Stmt> stmts = parser.parse();
 
-        if (Lox.printAst)
-            System.out.println(new ASTPrinter().print(expr));
-        else {
-            Object result = interpreter.interpret(expr);
-            System.out.println(Interpreter.stringify(result));
+        if (Lox.printAst) {
+            new ASTPrinter().print(stmts);
+        } else {
+            interpreter.interpret(stmts);
         }
     }
 

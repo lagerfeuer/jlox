@@ -1,9 +1,12 @@
 package at.lagerfeuer.lox.ast;
 
-public class ASTPrinter implements Expr.Visitor<String> {
+import java.util.List;
 
-    public String print(Expr expr) {
-        return expr.accept(this);
+public class ASTPrinter implements Expr.Visitor<String>, Stmt.Visitor<Void> {
+
+    public void print(List<Stmt> stmts) {
+        for (Stmt stmt : stmts)
+            stmt.accept(this);
     }
 
     @Override
@@ -61,5 +64,17 @@ public class ASTPrinter implements Expr.Visitor<String> {
         builder.append(")");
 
         return builder.toString();
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        System.out.println(stmt.expr.accept(this));
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        System.out.println("print " + stmt.expr.accept(this));
+        return null;
     }
 }

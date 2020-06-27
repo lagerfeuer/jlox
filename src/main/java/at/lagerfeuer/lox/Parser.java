@@ -1,6 +1,7 @@
 package at.lagerfeuer.lox;
 
 import at.lagerfeuer.lox.ast.Expr;
+import at.lagerfeuer.lox.ast.Stmt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,12 +90,34 @@ public class Parser {
         return new ParseError();
     }
 
-    public Expr parse() {
+    public List<Stmt> parse() {
+        List<Stmt> stmts = new ArrayList<>();
         try {
-            return expression();
+            while (!isAtEnd())
+                stmts.add(statement());
         } catch (ParseError error) {
-            return null;
+            stmts.clear();
+            return stmts;
         }
+        return stmts;
+    }
+
+    private Stmt statement() {
+        if (match(PRINT))
+            return printStatement();
+        return expressionStatement();
+    }
+
+    private Stmt.Print printStatement() {
+        Expr expr = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Print(expr);
+    }
+
+    private Stmt.Expression expressionStatement() {
+        Expr expr = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
     }
 
     private Expr expression() {

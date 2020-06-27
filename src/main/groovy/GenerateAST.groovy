@@ -77,6 +77,9 @@ def defineType(
 def outputDir = new File("src/main/java/at/lagerfeuer/lox/ast/")
 if (!outputDir.exists())
     outputDir.mkdirs()
+def out = outputDir.toString()
+
+// Expression
 List<String> expr = Arrays.asList(
         "Binary : Expr left, Token operator, Expr right",
         "Grouping : Expr expr",
@@ -85,5 +88,11 @@ List<String> expr = Arrays.asList(
         "Ternary : Expr condition, Expr trueBranch, Expr falseBranch",
         "Comma : List<Expr> exprs"
 )
-defineAst(outputDir.toString(), "Expr", expr)
+defineAst(out, "Expr", expr)
 
+// Statement
+List<String> stmt = Arrays.asList(
+        "Expression : Expr expr",
+        "Print : Expr expr"
+)
+defineAst(out, "Stmt", stmt)
