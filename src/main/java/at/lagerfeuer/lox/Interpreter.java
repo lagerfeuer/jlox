@@ -37,6 +37,10 @@ public class Interpreter implements Expr.Visitor<Object> {
         return object.toString();
     }
 
+    private String str(Object object) {
+        return Interpreter.stringify(object);
+    }
+
     private boolean isTruthy(Object obj) {
         if (obj == null)
             return false;
@@ -80,6 +84,15 @@ public class Interpreter implements Expr.Visitor<Object> {
         throw new RuntimeError(operator, "Operands must be numbers.");
     }
 
+    private TokenType types(Object left, Object right)
+            throws RuntimeError {
+        if (left instanceof Double && right instanceof Double)
+            return TokenType.NUMBER;
+        if (left instanceof String && right instanceof String)
+            return TokenType.STRING;
+        return null;
+    }
+
     @Override
     public Object visitBinaryExpr(Expr.Binary expr) {
         Object left = evaluate(expr.left);
@@ -91,6 +104,8 @@ public class Interpreter implements Expr.Visitor<Object> {
                     return (double) left + (double) right;
                 if (typeCheck(TokenType.STRING, left, right))
                     return (double) left + (double) right;
+                if (left instanceof String || right instanceof String)
+                    return str(left) + str(right);
                 throw new RuntimeError(expr.operator,
                         "Expecting operands to be numbers or strings.");
             case MINUS:
@@ -101,19 +116,49 @@ public class Interpreter implements Expr.Visitor<Object> {
                 return (double) left * (double) right;
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
+                if ((double) right == 0)
+                    throw new RuntimeError(expr.operator, "Division by 0");
                 return (double) left / (double) right;
             case GREATER:
-                checkNumberOperands(expr.operator, left, right);
-                return (double) left > (double) right;
+                switch (types(left, right)) {
+                    case NUMBER:
+                        return (double) left > (double) right;
+                    case STRING:
+                        return ((String) left).compareTo((String) right) > 0;
+                    default:
+                        throw new RuntimeError(expr.operator,
+                                "Operands must be numbers or strings.");
+                }
             case GREATER_EQUAL:
-                checkNumberOperands(expr.operator, left, right);
-                return (double) left >= (double) right;
+                switch (types(left, right)) {
+                    case NUMBER:
+                        return (double) left >= (double) right;
+                    case STRING:
+                        return ((String) left).compareTo((String) right) >= 0;
+                    default:
+                        throw new RuntimeError(expr.operator,
+                                "Operands must be numbers or strings.");
+                }
             case LESS:
-                checkNumberOperands(expr.operator, left, right);
-                return (double) left < (double) right;
+                switch (types(left, right)) {
+                    case NUMBER:
+                        return (double) left < (double) right;
+                    case STRING:
+                        return ((String) left).compareTo((String) right) < 0;
+                    default:
+                        throw new RuntimeError(expr.operator,
+                                "Operands must be numbers or strings.");
+                }
             case LESS_EQUAL:
-                checkNumberOperands(expr.operator, left, right);
-                return (double) left <= (double) right;
+                switch (types(left, right)) {
+                    case NUMBER:
+                        return (double) left <= (double) right;
+                    case STRING:
+                        return ((String) left).compareTo((String) right) <= 0;
+                    default:
+                        throw new RuntimeError(expr.operator,
+                                "Operands must be numbers or strings.");
+                }
             case EQUAL_EQUAL:
                 return Objects.equals(left, right);
             case BANG_EQUAL:

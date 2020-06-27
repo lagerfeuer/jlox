@@ -31,6 +31,25 @@ class InterpreterTest extends Interpreter {
         assertEquals(ref, interpret("6 - 2"));
         assertEquals(ref, interpret("2 * 2"));
         assertEquals(ref, interpret("8 / 2"));
+
+        assertNull(interpret("1 / 0")); // throws error internally
+
+        assertEquals("test4", interpret("\"test\" + 4"));
+        assertEquals("4test", interpret("4 + \"test\""));
+
+        assertEquals(true, interpret("\"a\" < \"b\""));
+        assertEquals(true, interpret("\"a\" <= \"b\""));
+        assertEquals(true, interpret("\"a\" != \"b\""));
+        assertEquals(false, interpret("\"a\" == \"b\""));
+        assertEquals(false, interpret("\"a\" >= \"b\""));
+        assertEquals(false, interpret("\"a\" > \"b\""));
+
+        assertEquals(false, interpret("\"a\" < \"a\""));
+        assertEquals(true, interpret("\"a\" <= \"a\""));
+        assertEquals(false, interpret("\"a\" != \"a\""));
+        assertEquals(true, interpret("\"a\" == \"a\""));
+        assertEquals(true, interpret("\"a\" >= \"a\""));
+        assertEquals(false, interpret("\"a\" > \"a\""));
     }
 
     @Test
