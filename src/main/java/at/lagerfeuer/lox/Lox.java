@@ -87,8 +87,7 @@ public class Lox {
      * Execute Lox REPL.
      */
     private static void repl() {
-        InputStreamReader input = new InputStreamReader(System.in);
-        BufferedReader reader = new BufferedReader(input);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println(String.format("JLox v%s", "0.1"));
 
         try {

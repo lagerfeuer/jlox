@@ -81,6 +81,7 @@ def out = outputDir.toString()
 
 // Expression
 List<String> expr = Arrays.asList(
+        "Assign : Token name, Expr value",
         "Binary : Expr left, Token operator, Expr right",
         "Grouping : Expr expr",
         "Literal : Object value",

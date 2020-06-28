@@ -145,9 +145,24 @@ public class Parser {
     private Expr comma() {
         List<Expr> list = new ArrayList<>();
         do {
-            list.add(ternary());
+            list.add(assignment());
         } while (match(COMMA));
         return (list.size() == 1) ? list.get(0) : new Expr.Comma(list);
+    }
+
+    private Expr assignment() {
+        Expr expr = ternary();
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable) expr).name;
+                return new Expr.Assign(name, value);
+            }
+            error(equals, "Invalid assignment target.");
+        }
+        return expr;
     }
 
     private Expr ternary() {

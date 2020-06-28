@@ -10,6 +10,12 @@ public class ASTPrinter implements Expr.Visitor<String>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public String visitAssignExpr(Expr.Assign expr) {
+        return String.format("%s = %s", expr.name.lexeme,
+                expr.value.accept(this));
+    }
+
+    @Override
     public String visitBinaryExpr(Expr.Binary expr) {
         return parenthesize(expr.operator.lexeme, expr.left, expr.right);
     }

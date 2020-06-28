@@ -32,7 +32,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
      */
     public Object interpret(Expr expr) {
         try {
-            return expr.accept(this);
+            return evaluate(expr);
         } catch (RuntimeError error) {
             return null;
         }
@@ -116,6 +116,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (left instanceof String && right instanceof String)
             return TokenType.STRING;
         return null;
+    }
+
+    @Override
+    public Object visitAssignExpr(Expr.Assign expr) {
+        Object value = evaluate(expr.value);
+        env.assign(expr.name, value);
+        return value;
     }
 
     @Override
