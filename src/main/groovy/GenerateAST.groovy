@@ -85,6 +85,7 @@ List<String> expr = Arrays.asList(
         "Grouping : Expr expr",
         "Literal : Object value",
         "Unary : Token operator, Expr right",
+        "Variable : Token name",
         "Ternary : Expr condition, Expr trueBranch, Expr falseBranch",
         "Comma : List<Expr> exprs"
 )
@@ -93,6 +94,7 @@ defineAst(out, "Expr", expr)
 // Statement
 List<String> stmt = Arrays.asList(
         "Expression : Expr expr",
-        "Print : Expr expr"
+        "Print : Expr expr",
+        "Var : Token name, Expr initializer"
 )
 defineAst(out, "Stmt", stmt)

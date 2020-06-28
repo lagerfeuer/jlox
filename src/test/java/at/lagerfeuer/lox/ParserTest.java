@@ -9,11 +9,17 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParserTest {
-    private Expr parse(String input) {
+    private List<Stmt> parse(String input) {
         Lexer lexer = new Lexer(input);
         Parser parser = new Parser(lexer.scanTokens());
-        List<Stmt> stmts = parser.parse();
-        return (stmts.isEmpty()) ? null : ((Stmt.Expression) stmts.get(0)).expr;
+        return parser.parse();
+    }
+
+    private Expr parseExpr(String input) {
+        List<Stmt> stmts = parse(input);
+        return (stmts == null || stmts.isEmpty())
+                ? null
+                : ((Stmt.Expression) stmts.get(0)).expr;
     }
 
     private void assertLiteral(Expr literal, int ref) {
@@ -32,7 +38,7 @@ class ParserTest {
     @Test
     void equality() {
         String input = "1 != 2;";
-        Expr expr = parse(input);
+        Expr expr = parseExpr(input);
 
         assertTrue(expr instanceof Expr.Binary);
         Expr.Binary bexpr = (Expr.Binary) expr;
@@ -45,7 +51,7 @@ class ParserTest {
     @Test
     void comparison() {
         String input = "1 < 2;";
-        Expr expr = parse(input);
+        Expr expr = parseExpr(input);
 
         assertTrue(expr instanceof Expr.Binary);
         Expr.Binary bexpr = (Expr.Binary) expr;
@@ -58,7 +64,7 @@ class ParserTest {
     @Test
     void addition() {
         String input = "1 + 2 + 3;";
-        Expr expr = parse(input);
+        Expr expr = parseExpr(input);
 
         assertTrue(expr instanceof Expr.Binary);
         Expr.Binary bexpr = (Expr.Binary) expr;
@@ -76,7 +82,7 @@ class ParserTest {
     @Test
     void multiplication() {
         String input = "1 * 2 * 3;";
-        Expr expr = parse(input);
+        Expr expr = parseExpr(input);
 
         assertTrue(expr instanceof Expr.Binary);
         Expr.Binary bexpr = (Expr.Binary) expr;
@@ -94,7 +100,7 @@ class ParserTest {
     @Test
     void additionAndMultiplication() {
         String input = "1 + 2 * 3;";
-        Expr expr = parse(input);
+        Expr expr = parseExpr(input);
 
         assertTrue(expr instanceof Expr.Binary);
         Expr.Binary bexpr = (Expr.Binary) expr;
@@ -112,7 +118,7 @@ class ParserTest {
     @Test
     void unary() {
         String input = "!!true;";
-        Expr expr = parse(input);
+        Expr expr = parseExpr(input);
 
         assertTrue(expr instanceof Expr.Unary);
         Expr.Unary unary = (Expr.Unary) expr;
@@ -127,7 +133,7 @@ class ParserTest {
     @Test
     void parenthesis() {
         String input = "(nil);";
-        Expr expr = parse(input);
+        Expr expr = parseExpr(input);
 
         assertTrue(expr instanceof Expr.Grouping);
         Expr.Grouping gexpr = (Expr.Grouping) expr;
@@ -137,7 +143,7 @@ class ParserTest {
     @Test
     void ternary() {
         String input = "true ? 1 : 2;";
-        Expr expr = parse(input);
+        Expr expr = parseExpr(input);
 
         assertTrue(expr instanceof Expr.Ternary);
         Expr.Ternary texpr = (Expr.Ternary) expr;
@@ -150,7 +156,7 @@ class ParserTest {
     @Test
     void nestedTernary() {
         String input = "false ? true ? 1 : 2 : 3;";
-        Expr expr = parse(input);
+        Expr expr = parseExpr(input);
 
         assertTrue(expr instanceof Expr.Ternary);
         Expr.Ternary texpr = (Expr.Ternary) expr;
@@ -169,7 +175,7 @@ class ParserTest {
     @Test
     void comma() {
         String input = "1, 2, true ? 3 : -1, false;";
-        Expr expr = parse(input);
+        Expr expr = parseExpr(input);
 
         assertTrue(expr instanceof Expr.Comma);
         Expr.Comma comma = (Expr.Comma) expr;
@@ -181,17 +187,17 @@ class ParserTest {
     }
 
     @Test
-    void missingRParen() {
+    void invalidInput() {
         String input = "( 1 + 2; var a = 1;";
-        Expr expr = parse(input);
-        assertNull(expr);
+        List<Stmt> stmts = parse(input);
+        assertEquals(0, stmts.size());
 
         input = "+ 2 var a = 1;";
-        expr = parse(input);
-        assertNull(expr);
+        stmts = parse(input);
+        assertEquals(0, stmts.size());
 
         input = "+ 2;";
-        expr = parse(input);
+        Expr expr = parseExpr(input);
         assertNull(expr);
     }
 }

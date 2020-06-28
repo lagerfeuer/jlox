@@ -32,6 +32,11 @@ public class ASTPrinter implements Expr.Visitor<String>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public String visitVariableExpr(Expr.Variable expr) {
+        return expr.name.lexeme;
+    }
+
+    @Override
     public String visitTernaryExpr(Expr.Ternary expr) {
         StringBuilder builder = new StringBuilder();
         builder.append("(").append(expr.condition.accept(this))
@@ -75,6 +80,13 @@ public class ASTPrinter implements Expr.Visitor<String>, Stmt.Visitor<Void> {
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
         System.out.println("print " + stmt.expr.accept(this));
+        return null;
+    }
+
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt) {
+        System.out.println("var " + stmt.name.lexeme + " = " +
+                stmt.initializer.accept(this));
         return null;
     }
 }

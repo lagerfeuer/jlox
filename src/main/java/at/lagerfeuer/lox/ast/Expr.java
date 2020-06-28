@@ -10,6 +10,7 @@ public abstract class Expr {
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitUnaryExpr(Unary expr);
+    R visitVariableExpr(Variable expr);
     R visitTernaryExpr(Ternary expr);
     R visitCommaExpr(Comma expr);
   }
@@ -66,6 +67,18 @@ public abstract class Expr {
 
    public final Token operator;
    public final Expr right;
+  }
+  public static class Variable extends Expr {
+    public Variable (Token name) {
+      this.name = name;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitVariableExpr(this);
+    }
+
+   public final Token name;
   }
   public static class Ternary extends Expr {
     public Ternary (Expr condition, Expr trueBranch, Expr falseBranch) {

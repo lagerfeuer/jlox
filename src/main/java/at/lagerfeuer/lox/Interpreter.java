@@ -214,6 +214,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitVariableExpr(Expr.Variable expr) {
+        return null;
+    }
+
+    @Override
     public Object visitTernaryExpr(Expr.Ternary expr) {
         if (isTruthy(evaluate(expr.condition)))
             return evaluate(expr.trueBranch);
@@ -239,6 +244,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Void visitPrintStmt(Stmt.Print stmt) {
         Object value = evaluate(stmt.expr);
         System.out.println(stringify(value));
+        return null;
+    }
+
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt) {
         return null;
     }
 }
