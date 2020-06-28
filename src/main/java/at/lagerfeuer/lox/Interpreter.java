@@ -8,6 +8,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+    private Environment env = new Environment();
+
+    /**
+     * Interpret a program.
+     *
+     * @param stmts List of statements, parsed from the source code.
+     */
     public void interpret(List<Stmt> stmts) {
         try {
             for (Stmt stmt : stmts)
@@ -215,7 +222,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitVariableExpr(Expr.Variable expr) {
-        return null;
+        return env.get(expr.name);
     }
 
     @Override
@@ -249,6 +256,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitVarStmt(Stmt.Var stmt) {
+        Object value = null;
+        if (stmt.initializer != null)
+            value = evaluate(stmt.initializer);
+        env.define(stmt.name.lexeme, value);
         return null;
     }
 }
