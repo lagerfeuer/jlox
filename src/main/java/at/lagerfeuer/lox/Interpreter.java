@@ -38,6 +38,17 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
+    private void executeBlock(List<Stmt> stmts, Environment env) {
+        Environment previous = this.env;
+        try {
+            this.env = env;
+            for (Stmt stmt : stmts)
+                execute(stmt);
+        } finally {
+            this.env = previous;
+        }
+    }
+
     private void execute(Stmt stmt) {
         stmt.accept(this);
     }
@@ -246,6 +257,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         for (Expr e : expr.exprs)
             last = evaluate(e);
         return last;
+    }
+
+    @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        executeBlock(stmt.stmts, new Environment(env));
+        return null;
     }
 
     @Override

@@ -123,6 +123,8 @@ public class Parser {
     private Stmt statement() {
         if (match(PRINT))
             return printStatement();
+        if (match(LBRACE))
+            return new Stmt.Block(block());
         return expressionStatement();
     }
 
@@ -136,6 +138,14 @@ public class Parser {
         Expr expr = expression();
         consume(SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Expression(expr);
+    }
+
+    private List<Stmt> block() {
+        List<Stmt> stmts = new ArrayList<>();
+        while (!check(RBRACE) && !isAtEnd())
+            stmts.add(declaration());
+        consume(RBRACE, "Expect '}' after block.");
+        return stmts;
     }
 
     private Expr expression() {

@@ -78,6 +78,16 @@ public class ASTPrinter implements Expr.Visitor<String>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        System.out.println("{");
+        for (Stmt s : stmt.stmts) {
+            s.accept(this);
+        }
+        System.out.println("}");
+        return null;
+    }
+
+    @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
         System.out.println(stmt.expr.accept(this));
         return null;
