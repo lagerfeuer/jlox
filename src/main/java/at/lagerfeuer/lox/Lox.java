@@ -114,6 +114,10 @@ public class Lox {
 
         if (Lox.printAst) {
             new ASTPrinter().print(stmts);
+        } else if (interactive && stmts.size() == 1 && stmts.get(0) instanceof Stmt.Expression) {
+            // Print the result of a single expression
+            Object result = interpreter.interpret(((Stmt.Expression) stmts.get(0)).expr);
+            System.out.println(Interpreter.stringify(result));
         } else {
             interpreter.interpret(stmts);
         }
