@@ -96,10 +96,10 @@ public abstract class Expr {
    public final Token name;
   }
   public static class Ternary extends Expr {
-    public Ternary (Expr condition, Expr trueBranch, Expr falseBranch) {
+    public Ternary (Expr condition, Expr thenBranch, Expr elseBranch) {
       this.condition = condition;
-      this.trueBranch = trueBranch;
-      this.falseBranch = falseBranch;
+      this.thenBranch = thenBranch;
+      this.elseBranch = elseBranch;
     }
 
     @Override
@@ -108,8 +108,8 @@ public abstract class Expr {
     }
 
    public final Expr condition;
-   public final Expr trueBranch;
-   public final Expr falseBranch;
+   public final Expr thenBranch;
+   public final Expr elseBranch;
   }
   public static class Comma extends Expr {
     public Comma (List<Expr> exprs) {

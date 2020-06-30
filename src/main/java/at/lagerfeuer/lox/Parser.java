@@ -178,10 +178,10 @@ public class Parser {
     private Expr ternary() {
         Expr expr = equality();
         if (match(QUESTION)) {
-            Expr trueBranch = ternary();
+            Expr thenBranch = ternary();
             consume(COLON, "Ternary operator expects ':'");
-            Expr falseBranch = equality();
-            return new Expr.Ternary(expr, trueBranch, falseBranch);
+            Expr elseBranch = equality();
+            return new Expr.Ternary(expr, thenBranch, elseBranch);
         }
         return expr;
     }

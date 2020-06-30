@@ -46,8 +46,8 @@ public class ASTPrinter implements Expr.Visitor<String>, Stmt.Visitor<Void> {
     public String visitTernaryExpr(Expr.Ternary expr) {
         StringBuilder builder = new StringBuilder();
         builder.append("(").append(expr.condition.accept(this))
-                .append(" ? ").append(expr.trueBranch.accept(this))
-                .append(" : ").append(expr.falseBranch.accept(this))
+                .append(" ? ").append(expr.thenBranch.accept(this))
+                .append(" : ").append(expr.elseBranch.accept(this))
                 .append(")");
         return builder.toString();
     }

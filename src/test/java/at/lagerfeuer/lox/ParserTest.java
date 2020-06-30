@@ -149,8 +149,8 @@ class ParserTest {
         Expr.Ternary texpr = (Expr.Ternary) expr;
 
         assertLiteral(texpr.condition, true);
-        assertLiteral(texpr.trueBranch, 1.0);
-        assertLiteral(texpr.falseBranch, 2.0);
+        assertLiteral(texpr.thenBranch, 1.0);
+        assertLiteral(texpr.elseBranch, 2.0);
     }
 
     @Test
@@ -162,14 +162,14 @@ class ParserTest {
         Expr.Ternary texpr = (Expr.Ternary) expr;
 
         assertLiteral(texpr.condition, false);
-        assertTrue(texpr.trueBranch instanceof Expr.Ternary);
-        assertLiteral(texpr.falseBranch, 3.0);
+        assertTrue(texpr.thenBranch instanceof Expr.Ternary);
+        assertLiteral(texpr.elseBranch, 3.0);
 
-        Expr.Ternary trueexpr = (Expr.Ternary) texpr.trueBranch;
+        Expr.Ternary trueexpr = (Expr.Ternary) texpr.thenBranch;
 
         assertLiteral(trueexpr.condition, true);
-        assertLiteral(trueexpr.trueBranch, 1.0);
-        assertLiteral(trueexpr.falseBranch, 2.0);
+        assertLiteral(trueexpr.thenBranch, 1.0);
+        assertLiteral(trueexpr.elseBranch, 2.0);
     }
 
     @Test
