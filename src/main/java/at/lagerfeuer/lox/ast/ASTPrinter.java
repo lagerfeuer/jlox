@@ -94,6 +94,20 @@ public class ASTPrinter implements Expr.Visitor<String>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitIfStmt(Stmt.If stmt) {
+        if (stmt.elseBranch == null)
+            System.out.println(String.format("if (%s)\n%s",
+                    stmt.condition.accept(this),
+                    stmt.thenBranch.accept(this)));
+        else
+            System.out.println(String.format("if (%s)\n%s\n%s",
+                    stmt.condition.accept(this),
+                    stmt.thenBranch.accept(this),
+                    stmt.elseBranch.accept(this)));
+        return null;
+    }
+
+    @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
         System.out.println("print " + stmt.expr.accept(this));
         return null;

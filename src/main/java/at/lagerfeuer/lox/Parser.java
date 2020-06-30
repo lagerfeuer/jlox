@@ -125,6 +125,8 @@ public class Parser {
             return printStatement();
         if (match(LBRACE))
             return new Stmt.Block(block());
+        if (match(IF))
+            return ifStatement();
         return expressionStatement();
     }
 
@@ -146,6 +148,19 @@ public class Parser {
             stmts.add(declaration());
         consume(RBRACE, "Expect '}' after block.");
         return stmts;
+    }
+
+    private Stmt.If ifStatement() {
+        consume(LPAREN, "Expect '(' after 'if'.");
+        Expr condition = expression();
+        consume(RPAREN, "Expect ')' after if condition.");
+
+        Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+        if (match(ELSE))
+            elseBranch = statement();
+
+        return new Stmt.If(condition, thenBranch, elseBranch);
     }
 
     private Expr expression() {

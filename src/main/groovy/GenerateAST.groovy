@@ -96,6 +96,7 @@ defineAst(out, "Expr", expr)
 List<String> stmt = Arrays.asList(
         "Block : List<Stmt> stmts",
         "Expression : Expr expr",
+        "If : Expr condition, Stmt thenBranch, Stmt elseBranch",
         "Print : Expr expr",
         "Var : Token name, Expr initializer"
 )
