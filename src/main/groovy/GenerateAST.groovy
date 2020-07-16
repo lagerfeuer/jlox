@@ -88,7 +88,8 @@ List<String> expr = Arrays.asList(
         "Unary : Token operator, Expr right",
         "Variable : Token name",
         "Ternary : Expr condition, Expr thenBranch, Expr elseBranch",
-        "Comma : List<Expr> exprs"
+        "Comma : List<Expr> exprs",
+        "Logical : Expr left, Token operator, Expr right"
 )
 defineAst(out, "Expr", expr)
 

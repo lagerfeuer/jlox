@@ -260,6 +260,24 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitLogicalExpr(Expr.Logical expr) {
+        Object left = evaluate(expr.left);
+
+        switch(expr.operator.type) {
+            case OR:
+                if (isTruthy(left)) return left;
+                break;
+            case AND:
+                if (!isTruthy(left)) return left;
+                break;
+            default: // unreachable
+                break;
+        }
+
+        return evaluate(expr.right);
+    }
+
+    @Override
     public Void visitBlockStmt(Stmt.Block stmt) {
         executeBlock(stmt.stmts, new Environment(env));
         return null;

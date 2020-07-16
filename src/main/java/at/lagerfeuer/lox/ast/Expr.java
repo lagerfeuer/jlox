@@ -14,6 +14,7 @@ public abstract class Expr {
     R visitVariableExpr(Variable expr);
     R visitTernaryExpr(Ternary expr);
     R visitCommaExpr(Comma expr);
+    R visitLogicalExpr(Logical expr);
   }
   public static class Assign extends Expr {
     public Assign (Token name, Expr value) {
@@ -122,6 +123,22 @@ public abstract class Expr {
     }
 
    public final List<Expr> exprs;
+  }
+  public static class Logical extends Expr {
+    public Logical (Expr left, Token operator, Expr right) {
+      this.left = left;
+      this.operator = operator;
+      this.right = right;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitLogicalExpr(this);
+    }
+
+   public final Expr left;
+   public final Token operator;
+   public final Expr right;
   }
 
   abstract public <R> R accept(Visitor<R> visitor);
