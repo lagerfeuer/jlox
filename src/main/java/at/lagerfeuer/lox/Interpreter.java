@@ -263,7 +263,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Object visitLogicalExpr(Expr.Logical expr) {
         Object left = evaluate(expr.left);
 
-        switch(expr.operator.type) {
+        switch (expr.operator.type) {
             case OR:
                 if (isTruthy(left)) return left;
                 break;
@@ -311,6 +311,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (stmt.initializer != null)
             value = evaluate(stmt.initializer);
         env.define(stmt.name.lexeme, value);
+        return null;
+    }
+
+    @Override
+    public Void visitWhileStmt(Stmt.While stmt) {
+        while (isTruthy(evaluate(stmt.condition)))
+            execute(stmt.body);
         return null;
     }
 }

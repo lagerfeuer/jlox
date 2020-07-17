@@ -123,6 +123,8 @@ public class Parser {
     private Stmt statement() {
         if (match(PRINT))
             return printStatement();
+        if (match(WHILE))
+            return whileStatement();
         if (match(LBRACE))
             return new Stmt.Block(block());
         if (match(IF))
@@ -134,6 +136,14 @@ public class Parser {
         Expr expr = expression();
         consume(SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Print(expr);
+    }
+
+    private Stmt.While whileStatement() {
+        consume(LPAREN, "Expect '(' before while condition");
+        Expr condition = expression();
+        consume(RPAREN, "Expect ')' after while condition");
+        Stmt body = statement();
+        return new Stmt.While(condition, body);
     }
 
     private Stmt.Expression expressionStatement() {
