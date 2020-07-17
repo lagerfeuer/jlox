@@ -4,6 +4,7 @@ import at.lagerfeuer.lox.ast.Expr;
 import at.lagerfeuer.lox.ast.Stmt;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static at.lagerfeuer.lox.TokenType.*;
@@ -125,6 +126,8 @@ public class Parser {
             return printStatement();
         if (match(WHILE))
             return whileStatement();
+        if (match(FOR))
+            return forStatement();
         if (match(LBRACE))
             return new Stmt.Block(block());
         if (match(IF))
@@ -139,11 +142,48 @@ public class Parser {
     }
 
     private Stmt.While whileStatement() {
-        consume(LPAREN, "Expect '(' before while condition");
+        consume(LPAREN, "Expect '(' after 'while'");
         Expr condition = expression();
-        consume(RPAREN, "Expect ')' after while condition");
+        consume(RPAREN, "Expect ')' after 'while' condition");
         Stmt body = statement();
         return new Stmt.While(condition, body);
+    }
+
+    private Stmt forStatement() {
+        consume(LPAREN, "Expect '(' after 'for'");
+
+        Stmt initializer;
+        if (match(SEMICOLON))
+            initializer = null;
+        else if (match(VAR))
+            initializer = varDeclaration();
+        else
+            initializer = expressionStatement();
+
+        Expr condition = null;
+        if (!check(SEMICOLON))
+            condition = expression();
+        consume(SEMICOLON, "Expect ';' after 'for' loop condition");
+
+        Expr increment = null;
+        if (!check(SEMICOLON))
+            increment = expression();
+        consume(RPAREN, "Expect ')' after 'for' loop head");
+
+        Stmt body = statement();
+
+        // desugaring of for loop (convert to while loop)
+        if (increment != null)
+            body = new Stmt.Block(Arrays.asList(body, new Stmt.Expression(increment)));
+
+        body = new Stmt.While(
+                (condition == null) ? new Expr.Literal(true) : condition,
+                body);
+
+        if (initializer != null)
+            body = new Stmt.Block(Arrays.asList(initializer, body));
+
+        return body;
     }
 
     private Stmt.Expression expressionStatement() {
@@ -202,7 +242,7 @@ public class Parser {
 
     private Expr or() {
         Expr expr = and();
-        while(match(OR)) {
+        while (match(OR)) {
             Token operator = previous();
             Expr right = and();
             expr = new Expr.Logical(expr, operator, right);
@@ -212,7 +252,7 @@ public class Parser {
 
     private Expr and() {
         Expr expr = ternary();
-        while(match(AND)) {
+        while (match(AND)) {
             Token operator = previous();
             Expr right = ternary();
             expr = new Expr.Logical(expr, operator, right);
