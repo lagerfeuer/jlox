@@ -3,9 +3,10 @@ package at.lagerfeuer.lox;
 import at.lagerfeuer.lox.ast.Stmt;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-class InterpreterTest extends Interpreter {
+class ExprTest {
     private Object interpret(String input) {
         Lexer lexer = new Lexer(input);
         Parser parser = new Parser(lexer.scanTokens());
