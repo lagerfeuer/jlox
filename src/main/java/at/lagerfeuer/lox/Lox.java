@@ -1,6 +1,5 @@
 package at.lagerfeuer.lox;
 
-import at.lagerfeuer.lox.ast.ASTPrinter;
 import at.lagerfeuer.lox.ast.Expr;
 import at.lagerfeuer.lox.ast.Stmt;
 import at.lagerfeuer.utils.ExitCode;
@@ -19,17 +18,12 @@ public class Lox {
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
     static boolean interactive = false;
-    static boolean printAst = false;
 
     public static void main(String[] args) {
         Options options = new Options();
         options.addOption(Option.builder("h")
                 .longOpt("help")
                 .desc("Print this message")
-                .build());
-        options.addOption(Option.builder()
-                .longOpt("print-ast")
-                .desc("Print the AST instead of interpreting the input")
                 .build());
 
         DefaultParser parser = new DefaultParser();
@@ -46,9 +40,6 @@ public class Lox {
         if (cli.hasOption("help")) {
             help.printHelp("jlox", options);
             System.exit(ExitCode.SUCCESS);
-        }
-        if (cli.hasOption("print-ast")) {
-            Lox.printAst = true;
         }
 
         if (cliArgs.length > 1) {
@@ -112,9 +103,7 @@ public class Lox {
         Parser parser = new Parser(tokens);
         List<Stmt> stmts = parser.parse();
 
-        if (Lox.printAst) {
-            new ASTPrinter().print(stmts);
-        } else if (interactive && stmts.size() == 1 && stmts.get(0) instanceof Stmt.Expression) {
+        if (interactive && stmts.size() == 1 && stmts.get(0) instanceof Stmt.Expression) {
             // Print the result of a single expression
             Object result = interpreter.interpret(((Stmt.Expression) stmts.get(0)).expr);
             System.out.println(Interpreter.stringify(result));
