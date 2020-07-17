@@ -12,6 +12,7 @@ public abstract class Stmt {
     R visitPrintStmt(Print stmt);
     R visitVarStmt(Var stmt);
     R visitWhileStmt(While stmt);
+    R visitBreakStmt(Break stmt);
   }
   public static class Block extends Stmt {
     public Block (List<Stmt> stmts) {
@@ -92,6 +93,18 @@ public abstract class Stmt {
 
    public final Expr condition;
    public final Stmt body;
+  }
+  public static class Break extends Stmt {
+    public Break (Token token) {
+      this.token = token;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitBreakStmt(this);
+    }
+
+   public final Token token;
   }
 
   abstract public <R> R accept(Visitor<R> visitor);

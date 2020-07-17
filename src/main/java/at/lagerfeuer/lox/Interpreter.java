@@ -9,6 +9,7 @@ import java.util.Objects;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     private Environment env = new Environment();
+    private boolean breakNext = false;
 
     /**
      * Interpret a program.
@@ -39,11 +40,17 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     private void executeBlock(List<Stmt> stmts, Environment env) {
+        if (breakNext)
+            return;
+
         Environment previous = this.env;
         try {
             this.env = env;
-            for (Stmt stmt : stmts)
+            for (Stmt stmt : stmts) {
                 execute(stmt);
+                if (breakNext)
+                    return;
+            }
         } finally {
             this.env = previous;
         }
@@ -316,8 +323,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
-        while (isTruthy(evaluate(stmt.condition)))
+        while (isTruthy(evaluate(stmt.condition)) && !breakNext)
             execute(stmt.body);
+        breakNext = false;
+        return null;
+    }
+
+    @Override
+    public Void visitBreakStmt(Stmt.Break stmt) {
+        breakNext = true;
         return null;
     }
 }
