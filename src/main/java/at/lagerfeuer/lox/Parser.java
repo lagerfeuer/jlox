@@ -333,7 +333,28 @@ public class Parser {
             Expr right = unary();
             return new Expr.Unary(operator, right);
         }
-        return primary();
+        return call();
+    }
+
+    private Expr call() {
+        Expr expr = primary();
+        while (match(LPAREN))
+            expr = finishCall(expr);
+        return expr;
+    }
+
+    private Expr finishCall(Expr callee) {
+        List<Expr> arguments = new ArrayList<>();
+        if (!check(RPAREN)) {
+            do {
+                if (arguments.size() > Constants.MAX_CALL_ARGUMENTS)
+                    throw error(peek(), String.format("Cannot have more than %d call arguments.",
+                            Constants.MAX_CALL_ARGUMENTS));
+                arguments.add(expression());
+            } while (match(COMMA));
+        }
+        Token paren = consume(RPAREN, "Expect ')' after arguments in 'call'");
+        return new Expr.Call(callee, paren, arguments);
     }
 
     private Expr primary() {

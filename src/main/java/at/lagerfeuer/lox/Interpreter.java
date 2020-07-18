@@ -3,13 +3,34 @@ package at.lagerfeuer.lox;
 import at.lagerfeuer.lox.ast.Expr;
 import at.lagerfeuer.lox.ast.Stmt;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
-    private Environment env = new Environment();
+    private final Environment globals = new Environment();
+    private Environment env = globals;
     private boolean breakNext = false;
+
+    Interpreter() {
+        globals.define("clock", new LoxCallable() {
+            @Override
+            public int arity() {
+                return 0;
+            }
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                return (double) System.currentTimeMillis() / 1000.0;
+            }
+
+            @Override
+            public String toString() {
+                return "<native function>";
+            }
+        });
+    }
 
     /**
      * Interpret a program.
@@ -282,6 +303,21 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
 
         return evaluate(expr.right);
+    }
+
+    @Override
+    public Object visitCallExpr(Expr.Call expr) {
+        Object callee = evaluate(expr.callee);
+
+        List<Object> arguments = new ArrayList<>();
+        for (Expr arg : expr.arguments)
+            arguments.add(evaluate(arg));
+
+        LoxCallable function = (LoxCallable) callee;
+        if (function.arity() != arguments.size())
+            throw new RuntimeError(expr.paren, String.format("Function expects %d arguments, but got %d.",
+                    function.arity(), arguments.size()));
+        return function.call(this, arguments);
     }
 
     @Override
