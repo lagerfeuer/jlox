@@ -29,7 +29,6 @@ public enum TokenType {
     CLASS, VAR, FUN,
     IF, ELSE,
     FOR, WHILE, BREAK,
-    PRINT,
     RETURN,
     SUPER, THIS,
 

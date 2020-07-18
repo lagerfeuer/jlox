@@ -30,7 +30,6 @@ public class Lexer {
         put("for", FOR);
         put("while", WHILE);
         put("break", BREAK);
-        put("print", PRINT); // TODO make print a stdlib function, not a statement
         put("return", RETURN);
         put("super", SUPER);
         put("this", THIS);

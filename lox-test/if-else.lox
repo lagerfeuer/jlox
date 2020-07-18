@@ -1,21 +1,21 @@
 if (true)
-  print true;
+  print(true);
 else
-  print false;
+  print(false);
 
 if (false)
-  print true;
+  print(true);
 else
-  print false;
+  print(false);
 
 if (true) {
-  print true;
+  print(true);
 } else {
-  print false;
+  print(false);
 }
 
 if (false) {
-  print true;
+  print(true);
 } else {
-  print false;
+  print(false);
 }

@@ -79,7 +79,6 @@ public class Parser {
                 case FOR:
                 case IF:
                 case WHILE:
-                case PRINT:
                 case RETURN:
                     return;
             }
@@ -124,8 +123,6 @@ public class Parser {
     }
 
     private Stmt statement() {
-        if (match(PRINT))
-            return printStatement();
         if (match(WHILE))
             return whileStatement();
         if (match(FOR))
@@ -137,12 +134,6 @@ public class Parser {
         if (loopNesting > 0 && match(BREAK))
             return breakStatement();
         return expressionStatement();
-    }
-
-    private Stmt.Print printStatement() {
-        Expr expr = expression();
-        consume(SEMICOLON, "Expect ';' after expression.");
-        return new Stmt.Print(expr);
     }
 
     private Stmt.While whileStatement() {
