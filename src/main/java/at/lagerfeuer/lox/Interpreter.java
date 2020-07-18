@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
-    private final Environment globals = new Environment();
+    public final Environment globals = new Environment();
     private Environment env = globals;
     private boolean breakNext = false;
 
@@ -78,7 +78,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
-    private void executeBlock(List<Stmt> stmts, Environment env) {
+    public void executeBlock(List<Stmt> stmts, Environment env) {
         if (breakNext)
             return;
 
@@ -191,8 +191,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             case PLUS:
                 if (typeCheck(TokenType.NUMBER, left, right))
                     return (double) left + (double) right;
-                if (typeCheck(TokenType.STRING, left, right))
-                    return (double) left + (double) right;
+//                if (typeCheck(TokenType.STRING, left, right))
+//                    return str(left) + str(right);
                 if (left instanceof String || right instanceof String)
                     return str(left) + str(right);
                 throw new RuntimeError(expr.operator,
@@ -379,6 +379,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitBreakStmt(Stmt.Break stmt) {
         breakNext = true;
+        return null;
+    }
+
+    @Override
+    public Void visitFunctionStmt(Stmt.Function stmt) {
+        LoxFunction function = new LoxFunction(stmt);
+        env.define(stmt.name.lexeme, function);
         return null;
     }
 }

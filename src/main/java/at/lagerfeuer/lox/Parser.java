@@ -106,6 +106,8 @@ public class Parser {
         try {
             if (match(VAR))
                 return varDeclaration();
+            if (match(FUN))
+                return function("function");
             return statement();
         } catch (ParseError error) {
             synchronize();
@@ -120,6 +122,27 @@ public class Parser {
             initializer = expression();
         consume(SEMICOLON, "Expect ';' after variable declaration.");
         return new Stmt.Var(name, initializer);
+    }
+
+    private Stmt.Function function(String kind) {
+        Token name = consume(IDENTIFIER, "Expect " + kind + " identifier.");
+        consume(LPAREN, "Expect '(' after '" + kind + "' identifier.");
+
+        List<Token> parameters = new ArrayList<>();
+        if (!check(RPAREN)) {
+            do {
+                if (parameters.size() > Constants.MAX_CALL_ARGUMENTS)
+                    throw error(peek(), String.format("%s cannot have more than %d parameters",
+                            kind, Constants.MAX_CALL_ARGUMENTS));
+                parameters.add(consume(IDENTIFIER, "Expect parameter name."));
+            } while (match(COMMA));
+        }
+        consume(RPAREN, "Expect ')' after '" + kind + "' parameter list.");
+
+        consume(LBRACE, "Expect '{' before '" + kind + "' body.");
+        List<Stmt> body = block();
+
+        return new Stmt.Function(name, parameters, body);
     }
 
     private Stmt statement() {
@@ -138,7 +161,7 @@ public class Parser {
 
     private Stmt.While whileStatement() {
         consume(LPAREN, "Expect '(' after 'while'");
-        Expr condition = expression();
+        Expr condition = comma();
         consume(RPAREN, "Expect ')' after 'while' condition");
 
         loopNesting++;
@@ -161,12 +184,12 @@ public class Parser {
 
         Expr condition = null;
         if (!check(SEMICOLON))
-            condition = expression();
+            condition = comma();
         consume(SEMICOLON, "Expect ';' after 'for' loop condition");
 
         Expr increment = null;
         if (!check(SEMICOLON))
-            increment = expression();
+            increment = comma();
         consume(RPAREN, "Expect ')' after 'for' loop head");
 
         loopNesting++;
@@ -188,7 +211,7 @@ public class Parser {
     }
 
     private Stmt.Expression expressionStatement() {
-        Expr expr = expression();
+        Expr expr = comma();
         consume(SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Expression(expr);
     }
@@ -203,7 +226,7 @@ public class Parser {
 
     private Stmt.If ifStatement() {
         consume(LPAREN, "Expect '(' after 'if'.");
-        Expr condition = expression();
+        Expr condition = comma();
         consume(RPAREN, "Expect ')' after if condition.");
 
         Stmt thenBranch = statement();
@@ -220,16 +243,16 @@ public class Parser {
         return breakStmt;
     }
 
-    private Expr expression() {
-        return comma();
-    }
-
     private Expr comma() {
         List<Expr> list = new ArrayList<>();
         do {
-            list.add(assignment());
+            list.add(expression());
         } while (match(COMMA));
         return (list.size() == 1) ? list.get(0) : new Expr.Comma(list);
+    }
+
+    private Expr expression() {
+        return assignment();
     }
 
     private Expr assignment() {
@@ -344,6 +367,7 @@ public class Parser {
                 arguments.add(expression());
             } while (match(COMMA));
         }
+
         Token paren = consume(RPAREN, "Expect ')' after arguments in 'call'");
         return new Expr.Call(callee, paren, arguments);
     }

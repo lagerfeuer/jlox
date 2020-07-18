@@ -101,6 +101,7 @@ List<String> stmt = Arrays.asList(
         "If : Expr condition, Stmt thenBranch, Stmt elseBranch",
         "Var : Token name, Expr initializer",
         "While : Expr condition, Stmt body",
-        "Break : Token token"
+        "Break : Token token",
+        "Function : Token name, List<Token> parameters, List<Stmt> body"
 )
 defineAst(out, "Stmt", stmt)
