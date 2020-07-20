@@ -388,4 +388,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         env.define(stmt.name.lexeme, function);
         return null;
     }
+
+    @Override
+    public Void visitReturnStmt(Stmt.Return stmt) {
+        Object value = null;
+        if(stmt.expr != null)
+            value = evaluate(stmt.expr);
+        throw new Return(value);
+    }
 }

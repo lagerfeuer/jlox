@@ -146,6 +146,8 @@ public class Parser {
     }
 
     private Stmt statement() {
+        if (match(RETURN))
+            return returnStatement();
         if (match(WHILE))
             return whileStatement();
         if (match(FOR))
@@ -157,6 +159,16 @@ public class Parser {
         if (loopNesting > 0 && match(BREAK))
             return breakStatement();
         return expressionStatement();
+    }
+
+    private Stmt.Return returnStatement() {
+        Token token = previous();
+        Expr expr = null;
+        if (!check(SEMICOLON))
+            expr = expression();
+        consume(SEMICOLON, "Expect ';' after 'return'.");
+
+        return new Stmt.Return(token, expr);
     }
 
     private Stmt.While whileStatement() {
