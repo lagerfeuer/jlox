@@ -41,4 +41,16 @@ public class Environment {
         throw new RuntimeError(name,
                 String.format("Undefined variable '%s'.", name.lexeme));
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        if (enclosing != null)
+            builder.append(enclosing.toString());
+        for (String key : values.keySet()) {
+            String value = values.get(key) != null ? values.get(key).toString() : "null";
+            builder.append(String.format("%s:\t%s\n", key, value));
+        }
+        return builder.toString();
+    }
 }
