@@ -16,6 +16,7 @@ public abstract class Expr {
     R visitCommaExpr(Comma expr);
     R visitLogicalExpr(Logical expr);
     R visitCallExpr(Call expr);
+    R visitLambdaExpr(Lambda expr);
   }
   public static class Assign extends Expr {
     public Assign (Token name, Expr value) {
@@ -31,6 +32,7 @@ public abstract class Expr {
    public final Token name;
    public final Expr value;
   }
+
   public static class Binary extends Expr {
     public Binary (Expr left, Token operator, Expr right) {
       this.left = left;
@@ -47,6 +49,7 @@ public abstract class Expr {
    public final Token operator;
    public final Expr right;
   }
+
   public static class Grouping extends Expr {
     public Grouping (Expr expr) {
       this.expr = expr;
@@ -59,6 +62,7 @@ public abstract class Expr {
 
    public final Expr expr;
   }
+
   public static class Literal extends Expr {
     public Literal (Object value) {
       this.value = value;
@@ -71,6 +75,7 @@ public abstract class Expr {
 
    public final Object value;
   }
+
   public static class Unary extends Expr {
     public Unary (Token operator, Expr right) {
       this.operator = operator;
@@ -85,6 +90,7 @@ public abstract class Expr {
    public final Token operator;
    public final Expr right;
   }
+
   public static class Variable extends Expr {
     public Variable (Token name) {
       this.name = name;
@@ -97,6 +103,7 @@ public abstract class Expr {
 
    public final Token name;
   }
+
   public static class Ternary extends Expr {
     public Ternary (Expr condition, Expr thenBranch, Expr elseBranch) {
       this.condition = condition;
@@ -113,6 +120,7 @@ public abstract class Expr {
    public final Expr thenBranch;
    public final Expr elseBranch;
   }
+
   public static class Comma extends Expr {
     public Comma (List<Expr> exprs) {
       this.exprs = exprs;
@@ -125,6 +133,7 @@ public abstract class Expr {
 
    public final List<Expr> exprs;
   }
+
   public static class Logical extends Expr {
     public Logical (Expr left, Token operator, Expr right) {
       this.left = left;
@@ -141,6 +150,7 @@ public abstract class Expr {
    public final Token operator;
    public final Expr right;
   }
+
   public static class Call extends Expr {
     public Call (Expr callee, Token paren, List<Expr> arguments) {
       this.callee = callee;
@@ -157,6 +167,24 @@ public abstract class Expr {
    public final Token paren;
    public final List<Expr> arguments;
   }
+
+  public static class Lambda extends Expr {
+    public Lambda (Token token, List<Token> parameters, List<Stmt> body) {
+      this.token = token;
+      this.parameters = parameters;
+      this.body = body;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitLambdaExpr(this);
+    }
+
+   public final Token token;
+   public final List<Token> parameters;
+   public final List<Stmt> body;
+  }
+
 
   abstract public <R> R accept(Visitor<R> visitor);
 }

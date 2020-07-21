@@ -1,5 +1,6 @@
 package at.lagerfeuer.lox;
 
+import at.lagerfeuer.lox.ast.Expr;
 import at.lagerfeuer.lox.ast.Stmt;
 
 import java.util.List;
@@ -10,6 +11,11 @@ public class LoxFunction implements LoxCallable {
 
     public LoxFunction(Stmt.Function declaration, Environment closure) {
         this.declaration = declaration;
+        this.closure = closure;
+    }
+
+    public LoxFunction(Expr.Lambda lambda, Environment closure) {
+        this.declaration = new Stmt.Function(null, lambda.parameters, lambda.body);
         this.closure = closure;
     }
 
@@ -36,6 +42,6 @@ public class LoxFunction implements LoxCallable {
 
     @Override
     public String toString() {
-        return "<function " + declaration.name.lexeme + ">";
+        return (declaration.name != null) ? "<function " + declaration.name.lexeme + ">" : "<anonymous function>";
     }
 }

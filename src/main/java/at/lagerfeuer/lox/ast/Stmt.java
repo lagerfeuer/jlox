@@ -27,6 +27,7 @@ public abstract class Stmt {
 
    public final List<Stmt> stmts;
   }
+
   public static class Expression extends Stmt {
     public Expression (Expr expr) {
       this.expr = expr;
@@ -39,6 +40,7 @@ public abstract class Stmt {
 
    public final Expr expr;
   }
+
   public static class If extends Stmt {
     public If (Expr condition, Stmt thenBranch, Stmt elseBranch) {
       this.condition = condition;
@@ -55,6 +57,7 @@ public abstract class Stmt {
    public final Stmt thenBranch;
    public final Stmt elseBranch;
   }
+
   public static class Var extends Stmt {
     public Var (Token name, Expr initializer) {
       this.name = name;
@@ -69,6 +72,7 @@ public abstract class Stmt {
    public final Token name;
    public final Expr initializer;
   }
+
   public static class While extends Stmt {
     public While (Expr condition, Stmt body) {
       this.condition = condition;
@@ -83,6 +87,7 @@ public abstract class Stmt {
    public final Expr condition;
    public final Stmt body;
   }
+
   public static class Break extends Stmt {
     public Break (Token token) {
       this.token = token;
@@ -95,6 +100,7 @@ public abstract class Stmt {
 
    public final Token token;
   }
+
   public static class Function extends Stmt {
     public Function (Token name, List<Token> parameters, List<Stmt> body) {
       this.name = name;
@@ -111,6 +117,7 @@ public abstract class Stmt {
    public final List<Token> parameters;
    public final List<Stmt> body;
   }
+
   public static class Return extends Stmt {
     public Return (Token keyword, Expr expr) {
       this.keyword = keyword;
@@ -125,6 +132,7 @@ public abstract class Stmt {
    public final Token keyword;
    public final Expr expr;
   }
+
 
   abstract public <R> R accept(Visitor<R> visitor);
 }

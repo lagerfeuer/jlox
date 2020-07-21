@@ -70,6 +70,7 @@ def defineType(
     }
 
     writer.println("  }")
+    writer.println()
 }
 
 
@@ -90,7 +91,8 @@ List<String> expr = Arrays.asList(
         "Ternary : Expr condition, Expr thenBranch, Expr elseBranch",
         "Comma : List<Expr> exprs",
         "Logical : Expr left, Token operator, Expr right",
-        "Call : Expr callee, Token paren, List<Expr> arguments"
+        "Call : Expr callee, Token paren, List<Expr> arguments",
+        "Lambda : Token token, List<Token> parameters, List<Stmt> body"
 )
 defineAst(out, "Expr", expr)
 

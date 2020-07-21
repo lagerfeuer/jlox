@@ -40,6 +40,11 @@ public class Parser {
         return previous();
     }
 
+    private Token reverse() {
+        current--;
+        return (current > 0) ? previous() : null;
+    }
+
     private boolean check(TokenType type) {
         if (isAtEnd())
             return false;
@@ -107,7 +112,10 @@ public class Parser {
             if (match(VAR))
                 return varDeclaration();
             if (match(FUN))
-                return function("function");
+                if(check(IDENTIFIER))
+                    return function("function");
+                else
+                    reverse(); // un-advance token to be parsed as lambda expression statement
             return statement();
         } catch (ParseError error) {
             synchronize();
@@ -126,8 +134,18 @@ public class Parser {
 
     private Stmt.Function function(String kind) {
         Token name = consume(IDENTIFIER, "Expect " + kind + " identifier.");
-        consume(LPAREN, "Expect '(' after '" + kind + "' identifier.");
 
+        consume(LPAREN, "Expect '(' after '" + kind + "' identifier.");
+        List<Token> parameters = parameterList(kind);
+        consume(RPAREN, "Expect ')' after '" + kind + "' parameter list.");
+
+        consume(LBRACE, "Expect '{' before '" + kind + "' body.");
+        List<Stmt> body = block();
+
+        return new Stmt.Function(name, parameters, body);
+    }
+
+    private List<Token> parameterList(String kind) {
         List<Token> parameters = new ArrayList<>();
         if (!check(RPAREN)) {
             do {
@@ -137,12 +155,7 @@ public class Parser {
                 parameters.add(consume(IDENTIFIER, "Expect parameter name."));
             } while (match(COMMA));
         }
-        consume(RPAREN, "Expect ')' after '" + kind + "' parameter list.");
-
-        consume(LBRACE, "Expect '{' before '" + kind + "' body.");
-        List<Stmt> body = block();
-
-        return new Stmt.Function(name, parameters, body);
+        return parameters;
     }
 
     private Stmt statement() {
@@ -224,6 +237,9 @@ public class Parser {
 
     private Stmt.Expression expressionStatement() {
         Expr expr = comma();
+        if(expr instanceof Expr.Lambda && match(LPAREN)) {
+            expr = finishCall(expr);
+        }
         consume(SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Expression(expr);
     }
@@ -264,7 +280,22 @@ public class Parser {
     }
 
     private Expr expression() {
+        if (match(FUN))
+            return lambda();
         return assignment();
+    }
+
+    private Expr.Lambda lambda() {
+        String kind = "lambda";
+        Token token = previous();
+        consume(LPAREN, "Expect '(' after 'fun' in " + kind + ".");
+        List<Token> parameters = parameterList(kind);
+        consume(RPAREN, "Expect ')' after parameter list.");
+
+        consume(LBRACE, "Expect '{' before '" + kind + "' body.");
+        List<Stmt> body = block();
+
+        return new Expr.Lambda(token, parameters, body);
     }
 
     private Expr assignment() {
