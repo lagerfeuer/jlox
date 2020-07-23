@@ -42,6 +42,23 @@ public class Environment {
                 String.format("Undefined variable '%s'.", name.lexeme));
     }
 
+    Environment ancestor(int distance) {
+        Environment env = this;
+        for (int i = 0; i < distance; i++) {
+            assert env != null;
+            env = env.enclosing;
+        }
+        return env;
+    }
+
+    void assignAt(int distance, Token name, Object value) {
+        ancestor(distance).values.put(name.lexeme, value);
+    }
+
+    Object getAt(int distance, String name) {
+        return ancestor(distance).values.get(name);
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

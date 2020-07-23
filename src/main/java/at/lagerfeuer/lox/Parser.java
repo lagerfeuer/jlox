@@ -16,8 +16,6 @@ public class Parser {
     private final List<Token> TOKENS;
     private int current = 0;
 
-    private int loopNesting = 0;
-
     public Parser(List<Token> tokens) {
         this.TOKENS = tokens;
     }
@@ -112,7 +110,7 @@ public class Parser {
             if (match(VAR))
                 return varDeclaration();
             if (match(FUN))
-                if(check(IDENTIFIER))
+                if (check(IDENTIFIER))
                     return function("function");
                 else
                     reverse(); // un-advance token to be parsed as lambda expression statement
@@ -169,7 +167,7 @@ public class Parser {
             return new Stmt.Block(block());
         if (match(IF))
             return ifStatement();
-        if (loopNesting > 0 && match(BREAK))
+        if (match(BREAK))
             return breakStatement();
         return expressionStatement();
     }
@@ -189,9 +187,7 @@ public class Parser {
         Expr condition = comma();
         consume(RPAREN, "Expect ')' after 'while' condition");
 
-        loopNesting++;
         Stmt body = statement();
-        loopNesting--;
 
         return new Stmt.While(condition, body);
     }
@@ -217,9 +213,7 @@ public class Parser {
             increment = comma();
         consume(RPAREN, "Expect ')' after 'for' loop head");
 
-        loopNesting++;
         Stmt body = statement();
-        loopNesting--;
 
         // desugaring of for loop (convert to while loop)
         if (increment != null)
@@ -237,7 +231,7 @@ public class Parser {
 
     private Stmt.Expression expressionStatement() {
         Expr expr = comma();
-        if(expr instanceof Expr.Lambda && match(LPAREN)) {
+        if (expr instanceof Expr.Lambda && match(LPAREN)) {
             expr = finishCall(expr);
         }
         consume(SEMICOLON, "Expect ';' after expression.");

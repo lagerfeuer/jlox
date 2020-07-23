@@ -103,6 +103,17 @@ public class Lox {
         Parser parser = new Parser(tokens);
         List<Stmt> stmts = parser.parse();
 
+        // exit if parser error occurred.
+        if (hadError)
+            return;
+
+        ResolverPass resolver = new ResolverPass(interpreter);
+        resolver.resolve(stmts);
+
+        // exit if resolver error occurred.
+        if (hadError)
+            return;
+
         if (interactive && stmts.size() == 1 && stmts.get(0) instanceof Stmt.Expression) {
             // Print the result of a single expression
             Object result = interpreter.interpret(((Stmt.Expression) stmts.get(0)).expr);
