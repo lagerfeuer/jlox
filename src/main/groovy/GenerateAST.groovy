@@ -99,6 +99,7 @@ defineAst(out, "Expr", expr)
 // Statement
 List<String> stmt = Arrays.asList(
         "Block : List<Stmt> stmts",
+        "Class : Token name, List<Stmt.Function> methods",
         "Expression : Expr expr",
         "If : Expr condition, Stmt thenBranch, Stmt elseBranch",
         "Var : Token name, Expr initializer",
