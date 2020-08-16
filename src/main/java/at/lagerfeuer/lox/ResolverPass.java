@@ -152,6 +152,19 @@ public class ResolverPass implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitGetExpr(Expr.Get expr) {
+        resolve(expr.object);
+        return null;
+    }
+
+    @Override
+    public Void visitSetExpr(Expr.Set expr) {
+        resolve(expr.value);
+        resolve(expr.object);
+        return null;
+    }
+
+    @Override
     public Void visitLambdaExpr(Expr.Lambda expr) {
         resolveFunction(new Stmt.Function(null, expr.parameters, expr.body),
                 FunctionType.FUNCTION);

@@ -92,6 +92,8 @@ List<String> expr = Arrays.asList(
         "Comma : List<Expr> exprs",
         "Logical : Expr left, Token operator, Expr right",
         "Call : Expr callee, Token paren, List<Expr> arguments",
+        "Get : Expr object, Token name",
+        "Set : Expr object, Token name, Expr value",
         "Lambda : Token token, List<Token> parameters, List<Stmt> body"
 )
 defineAst(out, "Expr", expr)

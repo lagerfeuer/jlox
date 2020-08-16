@@ -7,3 +7,6 @@ print(Test);
 
 var instance = Test();
 print(instance);
+
+instance.field = "I'm a field";
+print(instance.field);
