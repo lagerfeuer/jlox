@@ -17,6 +17,7 @@ public abstract class Expr {
     R visitLogicalExpr(Logical expr);
     R visitSetExpr(Set expr);
     R visitTernaryExpr(Ternary expr);
+    R visitThisExpr(This expr);
     R visitUnaryExpr(Unary expr);
     R visitVariableExpr(Variable expr);
   }
@@ -189,6 +190,19 @@ public abstract class Expr {
    public final Expr condition;
    public final Expr thenBranch;
    public final Expr elseBranch;
+  }
+
+  public static class This extends Expr {
+    public This (Token keyword) {
+      this.keyword = keyword;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitThisExpr(this);
+    }
+
+   public final Token keyword;
   }
 
   public static class Unary extends Expr {

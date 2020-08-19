@@ -44,4 +44,10 @@ public class LoxFunction implements LoxCallable {
     public String toString() {
         return (declaration.name != null) ? "<function " + declaration.name.lexeme + ">" : "<anonymous function>";
     }
+
+    public LoxFunction bind(LoxInstance instance) {
+        Environment env = new Environment(closure);
+        env.define("this", instance);
+        return new LoxFunction(declaration, env);
+    }
 }

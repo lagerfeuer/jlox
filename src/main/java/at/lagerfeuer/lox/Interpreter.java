@@ -307,6 +307,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitThisExpr(Expr.This expr) {
+        return lookUpVariable(expr.keyword, expr);
+    }
+
+    @Override
     public Object visitCommaExpr(Expr.Comma expr) {
         Object last = null;
         for (Expr e : expr.exprs)

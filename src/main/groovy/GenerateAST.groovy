@@ -93,6 +93,7 @@ List<String> expr = Arrays.asList(
         "Logical : Expr left, Token operator, Expr right",
         "Set : Expr object, Token name, Expr value",
         "Ternary : Expr condition, Expr thenBranch, Expr elseBranch",
+        "This : Token keyword",
         "Unary : Token operator, Expr right",
         "Variable : Token name"
 )
