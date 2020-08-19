@@ -2,6 +2,10 @@ class Test {
   hello() {
     return "Hello";
   }
+
+  say() {
+    print("Hello");
+  }
 }
 print(Test);
 
@@ -10,3 +14,5 @@ print(instance);
 
 instance.field = "I'm a field";
 print(instance.field);
+
+instance.say();
