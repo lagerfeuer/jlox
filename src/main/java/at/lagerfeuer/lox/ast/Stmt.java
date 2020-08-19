@@ -6,16 +6,29 @@ import at.lagerfeuer.lox.*;
 // Generated source code
 public abstract class Stmt {
   public interface Visitor<R> {
+    R visitBreakStmt(Break stmt);
     R visitBlockStmt(Block stmt);
     R visitClassStmt(Class stmt);
     R visitExpressionStmt(Expression stmt);
+    R visitFunctionStmt(Function stmt);
     R visitIfStmt(If stmt);
+    R visitReturnStmt(Return stmt);
     R visitVarStmt(Var stmt);
     R visitWhileStmt(While stmt);
-    R visitBreakStmt(Break stmt);
-    R visitFunctionStmt(Function stmt);
-    R visitReturnStmt(Return stmt);
   }
+  public static class Break extends Stmt {
+    public Break (Token token) {
+      this.token = token;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitBreakStmt(this);
+    }
+
+   public final Token token;
+  }
+
   public static class Block extends Stmt {
     public Block (List<Stmt> stmts) {
       this.stmts = stmts;
@@ -57,6 +70,23 @@ public abstract class Stmt {
    public final Expr expr;
   }
 
+  public static class Function extends Stmt {
+    public Function (Token name, List<Token> parameters, List<Stmt> body) {
+      this.name = name;
+      this.parameters = parameters;
+      this.body = body;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitFunctionStmt(this);
+    }
+
+   public final Token name;
+   public final List<Token> parameters;
+   public final List<Stmt> body;
+  }
+
   public static class If extends Stmt {
     public If (Expr condition, Stmt thenBranch, Stmt elseBranch) {
       this.condition = condition;
@@ -72,6 +102,21 @@ public abstract class Stmt {
    public final Expr condition;
    public final Stmt thenBranch;
    public final Stmt elseBranch;
+  }
+
+  public static class Return extends Stmt {
+    public Return (Token keyword, Expr expr) {
+      this.keyword = keyword;
+      this.expr = expr;
+    }
+
+    @Override
+    public <R> R accept(Visitor<R> visitor) {
+      return visitor.visitReturnStmt(this);
+    }
+
+   public final Token keyword;
+   public final Expr expr;
   }
 
   public static class Var extends Stmt {
@@ -102,51 +147,6 @@ public abstract class Stmt {
 
    public final Expr condition;
    public final Stmt body;
-  }
-
-  public static class Break extends Stmt {
-    public Break (Token token) {
-      this.token = token;
-    }
-
-    @Override
-    public <R> R accept(Visitor<R> visitor) {
-      return visitor.visitBreakStmt(this);
-    }
-
-   public final Token token;
-  }
-
-  public static class Function extends Stmt {
-    public Function (Token name, List<Token> parameters, List<Stmt> body) {
-      this.name = name;
-      this.parameters = parameters;
-      this.body = body;
-    }
-
-    @Override
-    public <R> R accept(Visitor<R> visitor) {
-      return visitor.visitFunctionStmt(this);
-    }
-
-   public final Token name;
-   public final List<Token> parameters;
-   public final List<Stmt> body;
-  }
-
-  public static class Return extends Stmt {
-    public Return (Token keyword, Expr expr) {
-      this.keyword = keyword;
-      this.expr = expr;
-    }
-
-    @Override
-    public <R> R accept(Visitor<R> visitor) {
-      return visitor.visitReturnStmt(this);
-    }
-
-   public final Token keyword;
-   public final Expr expr;
   }
 
 

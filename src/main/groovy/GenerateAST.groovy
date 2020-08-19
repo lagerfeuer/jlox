@@ -85,29 +85,29 @@ List<String> expr = Arrays.asList(
         "Assign : Token name, Expr value",
         "Binary : Expr left, Token operator, Expr right",
         "Grouping : Expr expr",
-        "Literal : Object value",
-        "Unary : Token operator, Expr right",
-        "Variable : Token name",
-        "Ternary : Expr condition, Expr thenBranch, Expr elseBranch",
-        "Comma : List<Expr> exprs",
-        "Logical : Expr left, Token operator, Expr right",
         "Call : Expr callee, Token paren, List<Expr> arguments",
+        "Comma : List<Expr> exprs",
         "Get : Expr object, Token name",
+        "Lambda : Token token, List<Token> parameters, List<Stmt> body",
+        "Literal : Object value",
+        "Logical : Expr left, Token operator, Expr right",
         "Set : Expr object, Token name, Expr value",
-        "Lambda : Token token, List<Token> parameters, List<Stmt> body"
+        "Ternary : Expr condition, Expr thenBranch, Expr elseBranch",
+        "Unary : Token operator, Expr right",
+        "Variable : Token name"
 )
 defineAst(out, "Expr", expr)
 
 // Statement
 List<String> stmt = Arrays.asList(
+        "Break : Token token",
         "Block : List<Stmt> stmts",
         "Class : Token name, List<Stmt.Function> methods",
         "Expression : Expr expr",
-        "If : Expr condition, Stmt thenBranch, Stmt elseBranch",
-        "Var : Token name, Expr initializer",
-        "While : Expr condition, Stmt body",
-        "Break : Token token",
         "Function : Token name, List<Token> parameters, List<Stmt> body",
-        "Return : Token keyword, Expr expr"
+        "If : Expr condition, Stmt thenBranch, Stmt elseBranch",
+        "Return : Token keyword, Expr expr",
+        "Var : Token name, Expr initializer",
+        "While : Expr condition, Stmt body"
 )
 defineAst(out, "Stmt", stmt)
