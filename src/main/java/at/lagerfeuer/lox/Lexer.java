@@ -33,6 +33,7 @@ public class Lexer {
         put("return", RETURN);
         put("super", SUPER);
         put("this", THIS);
+        put("static", STATIC);
     }};
 
     public Lexer(String source) {

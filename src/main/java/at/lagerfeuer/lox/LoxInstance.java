@@ -17,7 +17,7 @@ public class LoxInstance {
 
         LoxFunction method = klass.findMethod(name.lexeme);
         if (method != null)
-            return method.bind(this);
+            return (method.getQualifiers().contains(Qualifier.STATIC)) ? method : method.bind(this);
 
         throw new RuntimeError(name, String.format("Undefined property '%s'.", name.lexeme));
     }

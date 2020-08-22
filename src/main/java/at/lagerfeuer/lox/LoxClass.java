@@ -3,11 +3,12 @@ package at.lagerfeuer.lox;
 import java.util.List;
 import java.util.Map;
 
-public class LoxClass implements LoxCallable {
+public class LoxClass extends LoxInstance implements LoxCallable {
     final String name;
     private final Map<String, LoxFunction> methods;
 
     LoxClass(String name, Map<String, LoxFunction> methods) {
+        super(null);
         this.name = name;
         this.methods = methods;
     }
@@ -39,5 +40,14 @@ public class LoxClass implements LoxCallable {
         if (methods.containsKey(name))
             return methods.get(name);
         return null;
+    }
+
+    @Override
+    Object get(Token name) {
+        LoxFunction method = findMethod(name.lexeme);
+        if (method != null)
+            return (method.getQualifiers().contains(Qualifier.STATIC)) ? method : method.bind(this);
+
+        throw new RuntimeError(name, String.format("Undefined property '%s'.", name.lexeme));
     }
 }

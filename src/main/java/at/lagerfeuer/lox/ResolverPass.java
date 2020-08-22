@@ -136,6 +136,10 @@ public class ResolverPass implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             Lox.error(expr.keyword, "Cannot use 'this' outside of a class.");
             return null;
         }
+        if (currentFunction == FunctionType.STATIC) {
+            Lox.error(expr.keyword, "Cannot use 'this' inside a static method.");
+            return null;
+        }
         resolveLocal(expr, expr.keyword);
         return null;
     }
@@ -178,7 +182,7 @@ public class ResolverPass implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitLambdaExpr(Expr.Lambda expr) {
-        resolveFunction(new Stmt.Function(null, expr.parameters, expr.body),
+        resolveFunction(new Stmt.Function(null, expr.parameters, expr.body, null),
                 FunctionType.FUNCTION);
         return null;
     }
@@ -206,6 +210,8 @@ public class ResolverPass implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             FunctionType declaration = FunctionType.METHOD;
             if (method.name.lexeme.equals("init"))
                 declaration = FunctionType.INITIALIZER;
+            if (method.qualifiers.contains(Qualifier.STATIC))
+                declaration = FunctionType.STATIC;
             resolveFunction(method, declaration);
         }
 

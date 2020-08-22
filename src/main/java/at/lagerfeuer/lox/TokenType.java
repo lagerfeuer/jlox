@@ -31,7 +31,7 @@ public enum TokenType {
     FOR, WHILE, BREAK,
     RETURN,
     SUPER, THIS,
-
+    STATIC,
     // EOF
     EOF
 }

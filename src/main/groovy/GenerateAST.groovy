@@ -105,7 +105,7 @@ List<String> stmt = Arrays.asList(
         "Block : List<Stmt> stmts",
         "Class : Token name, List<Stmt.Function> methods",
         "Expression : Expr expr",
-        "Function : Token name, List<Token> parameters, List<Stmt> body",
+        "Function : Token name, List<Token> parameters, List<Stmt> body, List<Qualifier> qualifiers",
         "If : Expr condition, Stmt thenBranch, Stmt elseBranch",
         "Return : Token keyword, Expr expr",
         "Var : Token name, Expr initializer",

@@ -111,6 +111,7 @@ public class Parser {
                 return classDeclaration();
             if (match(VAR))
                 return varDeclaration();
+
             if (match(FUN))
                 if (check(IDENTIFIER))
                     return function("function");
@@ -128,8 +129,17 @@ public class Parser {
         consume(LBRACE, "Expect '{' before class body.");
 
         List<Stmt.Function> methods = new ArrayList<>();
-        while (!check(RBRACE) && !isAtEnd())
-            methods.add(function("method"));
+        while (!check(RBRACE) && !isAtEnd()) {
+            List<Qualifier> qualifiers = new ArrayList<>();
+            while (!check(IDENTIFIER) && !check(RBRACE) && !isAtEnd()) {
+                if (match(STATIC))
+                    qualifiers.add(Qualifier.STATIC);
+                else
+                    Lox.error(previous(), "Could not parse qualifier.");
+            }
+            methods.add(function("method", qualifiers));
+        }
+
 
         consume(RBRACE, "Expect '}' after class body.");
         return new Stmt.Class(name, methods);
@@ -145,6 +155,10 @@ public class Parser {
     }
 
     private Stmt.Function function(String kind) {
+        return function(kind, new ArrayList<>());
+    }
+
+    private Stmt.Function function(String kind, List<Qualifier> qualifiers) {
         Token name = consume(IDENTIFIER, "Expect " + kind + " identifier.");
 
         consume(LPAREN, "Expect '(' after '" + kind + "' identifier.");
@@ -154,7 +168,7 @@ public class Parser {
         consume(LBRACE, "Expect '{' before '" + kind + "' body.");
         List<Stmt> body = block();
 
-        return new Stmt.Function(name, parameters, body);
+        return new Stmt.Function(name, parameters, body, qualifiers);
     }
 
     private List<Token> parameterList(String kind) {

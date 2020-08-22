@@ -6,6 +6,7 @@ import at.lagerfeuer.utils.ExitCode;
 import org.apache.commons.cli.*;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
@@ -62,7 +63,7 @@ public class Lox {
     private static void runFile(String path) {
         try {
             String content = Files.readString(Paths.get(path), Charset.defaultCharset());
-            run(content);
+            run(content, new File(path).getName());
             if (hadError)
                 System.exit(ExitCode.DATAERR);
             if (hadRuntimeError)
@@ -87,7 +88,7 @@ public class Lox {
                 String line = reader.readLine();
                 if (line == null || line.isEmpty()) // CTRL + D
                     return;
-                run(line);
+                run(line, "<stdin>");
                 hadError = false;
             }
         } catch (IOException e) {
@@ -96,8 +97,8 @@ public class Lox {
         }
     }
 
-    private static void run(String source) {
-        Lexer lexer = new Lexer(source);
+    private static void run(String source, String filename) {
+        Lexer lexer = new Lexer(source, filename);
         List<Token> tokens = lexer.scanTokens();
 
         Parser parser = new Parser(tokens);
@@ -125,24 +126,28 @@ public class Lox {
 
     public static void error(String filename, int line, String message) {
         hadError = true;
-        report(line, filename, message);
+        report(filename, line, message);
     }
 
     public static void error(Token token, String message) {
         if (token.type == TokenType.EOF) {
-            report(token.line, " at end", message);
+            report(token.filename, token.line, " at end", message);
         } else {
-            report(token.line, " at '" + token.lexeme + "'", message);
+            report(token.filename, token.line, " at '" + token.lexeme + "'", message);
         }
     }
 
     public static void runtimeError(RuntimeError error) {
-        System.err.println(String.format("[RuntimeError] %s:%d\t%s",
-                error.token.file, error.token.line, error.getMessage()));
+        System.err.printf("[RuntimeError] %s:%d\t%s%n",
+                error.token.filename, error.token.line, error.getMessage());
         hadRuntimeError = true;
     }
 
-    private static void report(int line, String where, String message) {
-        System.err.println(String.format("[Error] %s:%d\t%s", where, line, message));
+    private static void report(String filename, int line, String message) {
+        System.err.printf("[Error] %s:%d\t%s%n", filename, line, message);
+    }
+
+    private static void report(String filename, int line, String where, String message) {
+        System.err.printf("[Error] %s:%d\t(%s)\t%s%n", filename, line, where, message);
     }
 }

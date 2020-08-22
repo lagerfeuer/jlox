@@ -23,9 +23,9 @@ class LexerTest {
 
     @Test
     void keywords() {
-        String source = "nil and or true false class var fun if else for while return super this";
+        String source = "nil and or true false class var fun if else for while return super this static";
         TokenType[] ref = {
-                NIL, AND, OR, TRUE, FALSE, CLASS, VAR, FUN, IF, ELSE, FOR, WHILE, RETURN, SUPER, THIS, EOF
+                NIL, AND, OR, TRUE, FALSE, CLASS, VAR, FUN, IF, ELSE, FOR, WHILE, RETURN, SUPER, THIS, STATIC, EOF
         };
         TokenType[] types = lex(source);
         assertArrayEquals(ref, types);

@@ -7,7 +7,7 @@ public class Token {
     public final String lexeme;
     public final Object literal;
     public final int line;
-    public final String file;
+    public final String filename;
 
     /**
      * Constructor for tokens.
@@ -15,19 +15,19 @@ public class Token {
      * @param type    Token type
      * @param lexeme  Lexeme
      * @param literal Literal
-     * @param file    Filename of the Lox source file
+     * @param filename    Filename of the Lox source filename
      * @param line    Line number where token is located
      */
-    public Token(TokenType type, String lexeme, Object literal, String file, int line) {
+    public Token(TokenType type, String lexeme, Object literal, String filename, int line) {
         this.type = type;
         this.lexeme = lexeme;
         this.literal = literal;
         this.line = line;
-        this.file = file;
+        this.filename = filename;
     }
 
     /**
-     * Shorthand constructor for REPL tokens omitting line number and filename.
+     * Shorthand constructor for REPL tokens omitting line number and filenamename.
      *
      * @param type    Token type
      * @param lexeme  Lexeme

@@ -71,10 +71,11 @@ public abstract class Stmt {
   }
 
   public static class Function extends Stmt {
-    public Function (Token name, List<Token> parameters, List<Stmt> body) {
+    public Function (Token name, List<Token> parameters, List<Stmt> body, List<Qualifier> qualifiers) {
       this.name = name;
       this.parameters = parameters;
       this.body = body;
+      this.qualifiers = qualifiers;
     }
 
     @Override
@@ -85,6 +86,7 @@ public abstract class Stmt {
    public final Token name;
    public final List<Token> parameters;
    public final List<Stmt> body;
+   public final List<Qualifier> qualifiers;
   }
 
   public static class If extends Stmt {
