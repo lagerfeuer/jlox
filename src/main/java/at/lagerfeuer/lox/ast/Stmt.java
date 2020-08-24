@@ -26,7 +26,7 @@ public abstract class Stmt {
       return visitor.visitBreakStmt(this);
     }
 
-   public final Token token;
+    public final Token token;
   }
 
   public static class Block extends Stmt {
@@ -39,7 +39,7 @@ public abstract class Stmt {
       return visitor.visitBlockStmt(this);
     }
 
-   public final List<Stmt> stmts;
+    public final List<Stmt> stmts;
   }
 
   public static class Class extends Stmt {
@@ -67,7 +67,7 @@ public abstract class Stmt {
       return visitor.visitExpressionStmt(this);
     }
 
-   public final Expr expr;
+    public final Expr expr;
   }
 
   public static class Function extends Stmt {
@@ -83,10 +83,10 @@ public abstract class Stmt {
       return visitor.visitFunctionStmt(this);
     }
 
-   public final Token name;
-   public final List<Token> parameters;
-   public final List<Stmt> body;
-   public final List<Qualifier> qualifiers;
+    public final Token name;
+    public final List<Token> parameters;
+    public final List<Stmt> body;
+    public final List<Qualifier> qualifiers;
   }
 
   public static class If extends Stmt {
@@ -101,9 +101,9 @@ public abstract class Stmt {
       return visitor.visitIfStmt(this);
     }
 
-   public final Expr condition;
-   public final Stmt thenBranch;
-   public final Stmt elseBranch;
+    public final Expr condition;
+    public final Stmt thenBranch;
+    public final Stmt elseBranch;
   }
 
   public static class Return extends Stmt {
@@ -117,8 +117,8 @@ public abstract class Stmt {
       return visitor.visitReturnStmt(this);
     }
 
-   public final Token keyword;
-   public final Expr expr;
+    public final Token keyword;
+    public final Expr expr;
   }
 
   public static class Var extends Stmt {
@@ -132,8 +132,8 @@ public abstract class Stmt {
       return visitor.visitVarStmt(this);
     }
 
-   public final Token name;
-   public final Expr initializer;
+    public final Token name;
+    public final Expr initializer;
   }
 
   public static class While extends Stmt {
@@ -147,8 +147,8 @@ public abstract class Stmt {
       return visitor.visitWhileStmt(this);
     }
 
-   public final Expr condition;
-   public final Stmt body;
+    public final Expr condition;
+    public final Stmt body;
   }
 
 

@@ -32,8 +32,8 @@ public abstract class Expr {
       return visitor.visitAssignExpr(this);
     }
 
-   public final Token name;
-   public final Expr value;
+    public final Token name;
+    public final Expr value;
   }
 
   public static class Binary extends Expr {
@@ -48,9 +48,9 @@ public abstract class Expr {
       return visitor.visitBinaryExpr(this);
     }
 
-   public final Expr left;
-   public final Token operator;
-   public final Expr right;
+    public final Expr left;
+    public final Token operator;
+    public final Expr right;
   }
 
   public static class Grouping extends Expr {
@@ -63,7 +63,7 @@ public abstract class Expr {
       return visitor.visitGroupingExpr(this);
     }
 
-   public final Expr expr;
+    public final Expr expr;
   }
 
   public static class Call extends Expr {
@@ -78,9 +78,9 @@ public abstract class Expr {
       return visitor.visitCallExpr(this);
     }
 
-   public final Expr callee;
-   public final Token paren;
-   public final List<Expr> arguments;
+    public final Expr callee;
+    public final Token paren;
+    public final List<Expr> arguments;
   }
 
   public static class Comma extends Expr {
@@ -93,7 +93,7 @@ public abstract class Expr {
       return visitor.visitCommaExpr(this);
     }
 
-   public final List<Expr> exprs;
+    public final List<Expr> exprs;
   }
 
   public static class Get extends Expr {
@@ -107,8 +107,8 @@ public abstract class Expr {
       return visitor.visitGetExpr(this);
     }
 
-   public final Expr object;
-   public final Token name;
+    public final Expr object;
+    public final Token name;
   }
 
   public static class Lambda extends Expr {
@@ -123,9 +123,9 @@ public abstract class Expr {
       return visitor.visitLambdaExpr(this);
     }
 
-   public final Token token;
-   public final List<Token> parameters;
-   public final List<Stmt> body;
+    public final Token token;
+    public final List<Token> parameters;
+    public final List<Stmt> body;
   }
 
   public static class Literal extends Expr {
@@ -138,7 +138,7 @@ public abstract class Expr {
       return visitor.visitLiteralExpr(this);
     }
 
-   public final Object value;
+    public final Object value;
   }
 
   public static class Logical extends Expr {
@@ -153,9 +153,9 @@ public abstract class Expr {
       return visitor.visitLogicalExpr(this);
     }
 
-   public final Expr left;
-   public final Token operator;
-   public final Expr right;
+    public final Expr left;
+    public final Token operator;
+    public final Expr right;
   }
 
   public static class Set extends Expr {
@@ -170,9 +170,9 @@ public abstract class Expr {
       return visitor.visitSetExpr(this);
     }
 
-   public final Expr object;
-   public final Token name;
-   public final Expr value;
+    public final Expr object;
+    public final Token name;
+    public final Expr value;
   }
 
   public static class Ternary extends Expr {
@@ -187,9 +187,9 @@ public abstract class Expr {
       return visitor.visitTernaryExpr(this);
     }
 
-   public final Expr condition;
-   public final Expr thenBranch;
-   public final Expr elseBranch;
+    public final Expr condition;
+    public final Expr thenBranch;
+    public final Expr elseBranch;
   }
 
   public static class This extends Expr {
@@ -202,7 +202,7 @@ public abstract class Expr {
       return visitor.visitThisExpr(this);
     }
 
-   public final Token keyword;
+    public final Token keyword;
   }
 
   public static class Unary extends Expr {
@@ -216,8 +216,8 @@ public abstract class Expr {
       return visitor.visitUnaryExpr(this);
     }
 
-   public final Token operator;
-   public final Expr right;
+    public final Token operator;
+    public final Expr right;
   }
 
   public static class Variable extends Expr {
@@ -230,7 +230,7 @@ public abstract class Expr {
       return visitor.visitVariableExpr(this);
     }
 
-   public final Token name;
+    public final Token name;
   }
 
 
