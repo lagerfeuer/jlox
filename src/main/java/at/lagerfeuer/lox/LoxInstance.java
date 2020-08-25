@@ -19,6 +19,13 @@ public class LoxInstance {
         if (method != null)
             return (method.getQualifiers().contains(Qualifier.STATIC)) ? method : method.bind(this);
 
+        // look up superclass methods if not found in class
+        if (klass.superclass != null) {
+            method = klass.superclass.findMethod(name.lexeme);
+            if (method != null)
+                return method.bind(this);
+        }
+
         throw new RuntimeError(name, String.format("Undefined property '%s'.", name.lexeme));
     }
 

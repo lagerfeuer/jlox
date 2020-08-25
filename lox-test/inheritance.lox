@@ -33,10 +33,6 @@ class B < A {
   }
 }
 
-class C < B {
-  test() {
-    super.test();
-  }
-}
+class C < B {}
 
 C().test();
