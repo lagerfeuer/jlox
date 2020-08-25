@@ -2,5 +2,6 @@ package at.lagerfeuer.lox;
 
 public enum ClassType {
     NONE,
-    CLASS
+    CLASS,
+    SUBCLASS
 }

@@ -181,6 +181,19 @@ public class ResolverPass implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitSuperExpr(Expr.Super expr) {
+        if (currentClass == ClassType.NONE)
+            Lox.error(expr.keyword,
+                    "Cannot use 'super' outside of a class.");
+        else if (currentClass != ClassType.SUBCLASS)
+            Lox.error(expr.keyword,
+                    "Cannot use 'super' in a class with no superclass.");
+
+        resolveLocal(expr, expr.keyword);
+        return null;
+    }
+
+    @Override
     public Void visitLambdaExpr(Expr.Lambda expr) {
         resolveFunction(new Stmt.Function(null, expr.parameters, expr.body, null),
                 FunctionType.FUNCTION);
@@ -203,6 +216,16 @@ public class ResolverPass implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         declare(stmt.name);
         define(stmt.name);
 
+        if (stmt.superclass != null) {
+            if (stmt.name.lexeme.equals(stmt.superclass.name.lexeme))
+                Lox.error(stmt.superclass.name, "A class cannot inherit from itself.");
+
+            currentClass = ClassType.SUBCLASS;
+            resolve(stmt.superclass);
+            beginScope();
+            scopes.peek().put("super", true);
+        }
+
         beginScope();
         scopes.peek().put("this", true);
 
@@ -214,6 +237,9 @@ public class ResolverPass implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
                 declaration = FunctionType.STATIC;
             resolveFunction(method, declaration);
         }
+
+        if (stmt.superclass != null)
+            endScope();
 
         endScope();
         currentClass = enclosingClass;

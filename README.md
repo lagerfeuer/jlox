@@ -8,4 +8,5 @@ Java implementation of Lox from the book [Crafting Interpreters](https://craftin
 * `print` is a builtin function, not a statement
 * _Resolver_ is called _ResolverPass_ to indicate it's a pass
 * Added `Qualifier` enum for function/method qualifiers like `static`
+* Inheritance uses `:` instead of `<`
 

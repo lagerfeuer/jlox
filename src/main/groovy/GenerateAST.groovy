@@ -66,7 +66,7 @@ def defineType(
     // Fields
     writer.println()
     for (String field : fields) {
-        writer.println(String.format("   public final %s;", field))
+        writer.println(String.format("    public final %s;", field))
     }
 
     writer.println("  }")
@@ -92,6 +92,7 @@ List<String> expr = Arrays.asList(
         "Literal : Object value",
         "Logical : Expr left, Token operator, Expr right",
         "Set : Expr object, Token name, Expr value",
+        "Super : Token keyword, Token method",
         "Ternary : Expr condition, Expr thenBranch, Expr elseBranch",
         "This : Token keyword",
         "Unary : Token operator, Expr right",
@@ -103,7 +104,7 @@ defineAst(out, "Expr", expr)
 List<String> stmt = Arrays.asList(
         "Break : Token token",
         "Block : List<Stmt> stmts",
-        "Class : Token name, List<Stmt.Function> methods",
+        "Class : Token name, Expr.Variable superclass, List<Stmt.Function> methods",
         "Expression : Expr expr",
         "Function : Token name, List<Token> parameters, List<Stmt> body, List<Qualifier> qualifiers",
         "If : Expr condition, Stmt thenBranch, Stmt elseBranch",
